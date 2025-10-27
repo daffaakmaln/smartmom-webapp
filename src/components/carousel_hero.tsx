@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 
 export default function HeroImageCarousel() {
-  const images = ["/mom1.jpg", "/mom2.jpg", "/mom3.jpg"]; // foto-foto kamu
+  const images = ["/mom1.jpg", "/mom2.jpg", "/mom3.jpg"]; // foto
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto-slide setiap 3 detik
+  // Auto-slide  3 detik
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) =>

@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import HeroImageCarousel from "./carousel_hero";
 
 export default function Hero() {
@@ -15,9 +15,11 @@ export default function Hero() {
           yakin selama kehamilan.
         </p>
         <div className="flex gap-4 mb-8">
-          <button className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition">
-            Mulai Sekarang →
-          </button>
+          <Link href="/dashboard">
+            <button className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition">
+              Mulai Sekarang →
+            </button>
+          </Link>
           <button className="bg-pink-500 text-white px-6 py-3 rounded-full hover:bg-pink-600 transition">
             Lihat Fitur
           </button>
