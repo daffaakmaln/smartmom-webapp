@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SmartMom - Teman Setia Ibu Hamil",
   description: "SmartMom adalah aplikasi yang dirancang untuk mendukung ibu hamil.",
+  keywords: ["ibu hamil", "dukungan", "kesehatan", "kebugaran"],
   icons: {
     icon: "/favicon.ico",
   },

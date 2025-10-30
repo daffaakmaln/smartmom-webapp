@@ -19,6 +19,7 @@ const testimonials: Testimonial[] = [
     text: "Artikelnya bener-bener membantu banget! Jadi lebih ngerti gimana cara menghadapi anak & lagi tantrum tanpa ikutan emosi 😊 Terima kasih SmartMom! 💕",
     avatar: "👩",
   },
+  
   {
     id: 2,
     name: "Putri",
