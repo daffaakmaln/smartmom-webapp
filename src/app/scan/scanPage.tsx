@@ -54,8 +54,8 @@ export default function ScanPage() {
           <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
             <Search size={20} className="text-gray-600" />
           </button>
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center">
-            <User size={20} className="text-white" />
+          <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center">
+              <span className="text-white text-xs lg:text-sm font-semibold">N</span>
           </div>
         </div>
       </div>
