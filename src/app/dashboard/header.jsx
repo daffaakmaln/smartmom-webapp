@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Bell } from "lucide-react";
+import { Search, Bell , User} from "lucide-react";
 
 export default function Header() {
   return (
@@ -16,13 +16,17 @@ export default function Header() {
 
       {/* Tombol aksi */}
       <div className="flex gap-3 mt-3 sm:mt-0">
-        <button className="bg-white shadow p-2 rounded-full hover:bg-gray-100 transition">
-          <Search size={20} className="text-gray-700" />
-        </button>
-        <button className="bg-white shadow p-2 rounded-full hover:bg-gray-100 transition relative">
-          <Bell size={20} className="text-gray-700" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-pink-500 rounded-full"></span>
-        </button>
+        <div className="flex items-center gap-4">
+                  <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <Bell size={20} className="text-gray-600" />
+                  </button>
+                  <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <Search size={20} className="text-gray-600" />
+                  </button>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center">
+                    <User size={20} className="text-white" />
+                  </div>
+                </div>
         <button className="bg-pink-500 text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition">
           + Tambah Catatan
         </button>

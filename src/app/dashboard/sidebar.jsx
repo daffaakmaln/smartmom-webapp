@@ -1,4 +1,7 @@
 "use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   Home,
@@ -6,29 +9,28 @@ import {
   Users,
   Settings,
   Activity,
-  Apple,
   MessageCircle,
   Menu,
+  ScanHeart,
+  Globe,  
   X,
-  Bell,
-  Search,
-  User,
+  ForkKnife,
 } from "lucide-react";
 
 const menu = [
-  { name: "Beranda", icon: <Home size={20} /> },
-  { name: "Scan AI Nutrisi", icon: <Apple size={20} /> },
-  { name: "Menu Harian", icon: <Activity size={20} /> },
-  { name: "Jurnal Kesehatan", icon: <Book size={20} /> },
-  { name: "Artikel & Edukasi", icon: <Book size={20} /> },
-  { name: "Komunitas Ibu", icon: <Users size={20} /> },
-  { name: "Konsultasi", icon: <MessageCircle size={20} /> },
-  { name: "Pengaturan Akun", icon: <Settings size={20} /> },
+  { name: "Beranda", icon: <Home size={20} />, href: "/dashboard" },
+  { name: "Scan AI Nutrisi", icon: <ScanHeart size={20} />, href: "/scan" },
+  { name: "Menu Harian", icon: <ForkKnife size={20} />, href: "/menumakanan" },
+  { name: "Jurnal Kesehatan", icon: <Activity size={20} />, href: "/jurnal" },
+  { name: "Artikel & Edukasi", icon: <Globe size={20} />, href: "/artikel" },
+  { name: "Komunitas Ibu", icon: <Users size={20} />, href: "/komunitas" },
+  { name: "Konsultasi", icon: <MessageCircle size={20} />, href: "/konsultasi" },
+  { name: "Pengaturan Akun", icon: <Settings size={20} />, href: "/pengaturan" },
 ];
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(0);
+  const pathname = usePathname(); // Gunakan pathname untuk mendeteksi halaman aktif
 
   return (
     <>
@@ -37,18 +39,18 @@ export default function Sidebar() {
         <h1 className="text-2xl font-bold mb-10">SmartMom</h1>
         <nav className="space-y-2">
           {menu.map((item, idx) => (
-            <div
+            <Link
               key={idx}
-              onClick={() => setActiveMenu(idx)}
+              href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${
-                activeMenu === idx
+                pathname === item.href
                   ? "bg-white text-pink-500 shadow-md"
                   : "hover:bg-pink-400/50"
               }`}
             >
               {item.icon}
               <span className="text-sm font-medium">{item.name}</span>
-            </div>
+            </Link>
           ))}
         </nav>
       </div>
@@ -56,18 +58,18 @@ export default function Sidebar() {
       {/* Mobile Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white border-t border-gray-200 flex justify-around py-2 px-2 shadow-lg z-50">
         {menu.slice(0, 4).map((item, idx) => (
-          <button
+          <Link
             key={idx}
-            onClick={() => setActiveMenu(idx)}
+            href={item.href}
             className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all ${
-              activeMenu === idx ? "text-pink-500 bg-pink-50" : "text-gray-500"
+              pathname === item.href ? "text-pink-500 bg-pink-50" : "text-gray-500"
             }`}
           >
             {item.icon}
             <span className="text-[10px] font-medium">
               {item.name.split(" ")[0]}
             </span>
-          </button>
+          </Link>
         ))}
         <button
           onClick={() => setOpen(!open)}
@@ -100,34 +102,30 @@ export default function Sidebar() {
             </div>
             <div className="space-y-2 max-h-[60vh] overflow-y-auto">
               {menu.slice(4).map((item, idx) => (
-                <div
+                <Link
                   key={idx}
-                  onClick={() => {
-                    setActiveMenu(idx + 4);
-                    setOpen(false);
-                  }}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
                   className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all ${
-                    activeMenu === idx + 4
+                    pathname === item.href
                       ? "bg-pink-500 text-white shadow-md"
                       : "bg-pink-50 text-gray-800 hover:bg-pink-100"
                   }`}
                 >
                   <span
                     className={
-                      activeMenu === idx + 4 ? "text-white" : "text-pink-500"
+                      pathname === item.href ? "text-white" : "text-pink-500"
                     }
                   >
                     {item.icon}
                   </span>
                   <p className="text-sm font-medium">{item.name}</p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
         </>
       )}
-
-      
     </>
   );
 }
