@@ -15,7 +15,7 @@ import {
   Check
 } from "lucide-react";
 
-export default function Menumakanan() {
+export default function MenuMakanan() {
   const [savedMenus, setSavedMenus] = useState<number[]>([]);
 
   // Sample menu data
@@ -26,7 +26,7 @@ export default function Menumakanan() {
       icon: "🥣",
       name: "Bubur Havermut dengan Buah Segar",
       description: "Oatmeal hangat dengan potongan pisang, stroberi, dan taburan chia seed",
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
+      image: "https://images.unsplash.com/photo-1590137876181-1d72a8c90cd6?w=800&q=80",
       calories: [320, 320, 320, 320],
       benefits: [
         "Sumber energi tahan lama",
@@ -107,8 +107,8 @@ export default function Menumakanan() {
             <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <Search size={20} className="text-gray-600" />
             </button>
-            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-xs lg:text-sm font-semibold">N</span>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center">
+              <User size={20} className="text-white" />
             </div>
           </div>
         </div>
