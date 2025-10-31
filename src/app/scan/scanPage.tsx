@@ -1,45 +1,136 @@
+// smartmom-webapp/src/app/scan/ScanPage.tsx
+
 "use client";
 
 import { useState, ChangeEvent } from "react";
-import { Upload, Sparkles, Info, X, Bell, Search, User } from "lucide-react";
+import axios, { isAxiosError } from 'axios'; // Import Axios dan isAxiosError
+import { Upload, Sparkles, Info, X, Bell, Search, User, CheckCircle, RefreshCcw, AlertTriangle, Heart } from "lucide-react"; // Menambahkan AlertTriangle
+
+// --- INTERFACE TYPESCRIPT (Struktur data dari Backend) ---
+// Kita menyederhanakan interface untuk mencocokkan tampilan kartu Anda (Kalori, Protein, Karbo, Lemak)
+interface KomponenGizi {
+  nama: string;
+  porsi: string;
+  kalori_kcal: number;
+  protein_g: number;
+  lemak_g: number;
+  karbohidrat_g: number;
+}
+
+interface HasilAnalisis {
+  total_kalori_kcal: number;
+  komponen_makanan: KomponenGizi[];
+  saran_gizi_singkat: string;
+}
+
+// Interface untuk tampilan kartu hasil (disesuaikan agar mudah diakses)
+interface HasilKartu {
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  // Kita tambahkan total_kalori untuk mencocokkan total_kalori_kcal dari backend
+}
+
+// URL API Backend Python Anda
+const API_URL = "http://localhost:8000/analyze-food/"; 
+// --- END INTERFACE ---
+
 
 export default function ScanPage() {
-  const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [scanResult, setScanResult] = useState<{
-    name: string;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-  } | null>(null);
+  const [fileObject, setFileObject] = useState<File | null>(null); // Menyimpan objek File asli untuk dikirim
+  const [selectedFile, setSelectedFile] = useState<string | null>(null); // Menyimpan URL blob untuk preview
 
-  // Sample activity data
+  const [isScanning, setIsScanning] = useState<boolean>(false);
+  const [scanResult, setScanResult] = useState<HasilKartu | null>(null);
+  const [analysisDetail, setAnalysisDetail] = useState<HasilAnalisis | null>(null); // Menyimpan detail penuh dari API
+  const [error, setError] = useState<string | null>(null); // State untuk penanganan error
+
+  // Sample activity data (Tetap sama)
   const activities = [
     { name: "Ayam Bakar", time: "1 jam lalu", status: "good" },
     { name: "Rendang Padang", time: "3 jam lalu", status: "warning" },
     { name: "Sushi", time: "4 jam lalu", status: "danger" },
   ];
 
+  // --- HANDLER FILE: Hanya Pilih File ---
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
-      setSelectedFile(URL.createObjectURL(file));
-      // Simulate scan result after 1.5 seconds
-      setTimeout(() => {
-        setScanResult({
-          name: file.name,
-          calories: 450,
-          protein: 25,
-          carbs: 35,
-          fat: 15,
-        });
-      }, 1500);
+      setFileObject(file); // Simpan objek file
+      setSelectedFile(URL.createObjectURL(file)); // Simpan URL untuk preview
+      setScanResult(null); 
+      setAnalysisDetail(null);
+      setError(null);
     }
   };
 
+  // --- HANDLER HAPUS ---
+  const handleClear = () => {
+    setFileObject(null);
+    setSelectedFile(null);
+    setScanResult(null);
+    setAnalysisDetail(null);
+    setError(null);
+  };
+  
+  // --- HANDLER ANALISIS: Memanggil FastAPI ---
+  const handleAnalyze = async () => {
+    if (!fileObject) {
+      setError("Tidak ada file gambar yang dipilih.");
+      return;
+    }
+
+    setIsScanning(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append("file", fileObject); // Kirim objek File yang sudah disimpan
+
+    try {
+      // Menggunakan Axios untuk POST request ke backend FastAPI
+      const response = await axios.post<HasilAnalisis>(API_URL, formData, {
+        // Jika Anda membutuhkan timeout panjang, tambahkan: timeout: 30000, 
+      });
+
+      const data = response.data;
+      
+      // Mengubah hasil kompleks dari backend menjadi format kartu sederhana
+      // Catatan: Biasanya Anda menjumlahkan makro dari komponen_makanan
+      const totalCalories = data.total_kalori_kcal;
+      const totalProtein = data.komponen_makanan.reduce((sum, item) => sum + item.protein_g, 0);
+      const totalCarbs = data.komponen_makanan.reduce((sum, item) => sum + item.karbohidrat_g, 0);
+      const totalFat = data.komponen_makanan.reduce((sum, item) => sum + item.lemak_g, 0);
+
+      setScanResult({
+        calories: totalCalories,
+        protein: Math.round(totalProtein),
+        carbs: Math.round(totalCarbs),
+        fat: Math.round(totalFat),
+      });
+
+      setAnalysisDetail(data); // Simpan detail lengkap untuk saran atau tabel
+
+    } catch (err) {
+      console.error("Kesalahan Analisis:", err);
+      if (isAxiosError(err) && err.response) {
+        // Error dari FastAPI
+        setError(`Error ${err.response.status}: ${err.response.data.detail || 'Terjadi kesalahan server.'}`);
+      } else {
+        // Error jaringan
+        setError("Koneksi gagal. Pastikan server FastAPI (Python) berjalan di port 8000.");
+      }
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const isFileReady = selectedFile && !isScanning;
+  
+  // --- RENDER UI (Bagian yang sudah Anda buat) ---
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header (Dipertahankan) */}
       <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Scan AI Nutrisi</h1>
@@ -62,32 +153,91 @@ export default function ScanPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Pesan Error Global */}
+        {error && (
+            <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl flex items-start">
+                <AlertTriangle size={20} className="mr-3 flex-shrink-0 mt-1" />
+                <div>
+                    <h4 className="font-bold">Gagal Menganalisis:</h4>
+                    <p className="text-sm">{error}</p>
+                </div>
+            </div>
+        )}
+        
         <div className="grid lg:grid-cols-2 gap-6">
-          {/* Upload Section */}
+          
+          {/* KARTU KIRI: UPLOAD & TIPS */}
           <div className="bg-white rounded-3xl p-8 shadow-sm">
-            <div className="flex flex-col items-center justify-center">
-              <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mb-6">
-                <Upload size={32} className="text-pink-500" />
-              </div>
-              <h2 className="text-xl font-bold text-gray-800 mb-2">
-                Upload Foto Makanan
-              </h2>
-              <p className="text-sm text-gray-500 text-center mb-6">
-                Pilih foto makanan dari galeri atau ambil foto baru
-              </p>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileSelect}
-                className="hidden"
-                id="file-upload"
-              />
-              <label
-                htmlFor="file-upload"
-                className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-8 py-3 rounded-full font-medium cursor-pointer hover:shadow-lg transition-all"
-              >
-                Pilih Foto
-              </label>
+            
+            {/* TAMPILAN FOTO TERPILIH */}
+            {selectedFile ? (
+                <div className="flex flex-col items-center">
+                    <div className="relative w-full max-w-sm aspect-video rounded-2xl overflow-hidden mb-4">
+                        <img
+                            src={selectedFile}
+                            alt="Food"
+                            className="w-full h-full object-cover"
+                        />
+                        {/* Tombol Hapus */}
+                        <button
+                            onClick={handleClear}
+                            className="absolute top-2 right-2 bg-white text-gray-700 p-1 rounded-full shadow-md hover:bg-gray-200 transition-colors"
+                            title="Hapus Foto"
+                        >
+                            <X size={16} />
+                        </button>
+                    </div>
+                    <p className="text-gray-700 font-medium mb-3">Foto Terpilih</p>
+                    <p className="text-sm text-gray-500 mb-6">Pilih foto makanan dan tekan "Analisa Nutrisi" di bawah.</p>
+                </div>
+            ) : (
+                // TAMPILAN PLACEHOLDER AWAL
+                <div className="flex flex-col items-center justify-center py-6">
+                    <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mb-6">
+                        <Upload size={32} className="text-pink-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 mb-2">
+                        Upload Foto Makanan
+                    </h2>
+                    <p className="text-sm text-gray-500 text-center mb-6">
+                        Pilih foto makanan dari galeri atau ambil foto baru
+                    </p>
+                </div>
+            )}
+
+            {/* Kontrol Tombol */}
+            <div className="flex flex-col items-center gap-3">
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    id="file-upload"
+                />
+                <label
+                    htmlFor="file-upload"
+                    className="bg-gray-100 text-gray-700 px-8 py-3 rounded-full font-medium cursor-pointer hover:bg-gray-200 transition-colors mb-2"
+                >
+                    {selectedFile ? 'Ganti Foto' : 'Pilih Foto'}
+                </label>
+                
+                {/* Tombol Analisa Nutrisi */}
+                <button
+                    onClick={handleAnalyze}
+                    disabled={!isFileReady || isScanning}
+                    className={`w-full max-w-xs py-3 rounded-full font-bold transition-all flex items-center justify-center ${
+                        isFileReady && !isScanning
+                            ? 'bg-black text-white hover:bg-gray-800 shadow-xl'
+                            : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                    }`}
+                >
+                    {isScanning ? (
+                        <RefreshCcw size={20} className="mr-2 animate-spin" />
+                    ) : (
+                        <Sparkles size={20} className="mr-2" />
+                    )}
+                    {isScanning ? 'Menganalisa...' : 'Analisa Nutrisi'}
+                </button>
             </div>
 
             {/* Tips Section */}
@@ -113,86 +263,99 @@ export default function ScanPage() {
             </div>
           </div>
 
-          {/* Result Section */}
+          {/* KARTU KANAN: HASIL ANALISIS */}
           <div className="bg-white rounded-3xl p-8 shadow-sm">
-            {!selectedFile ? (
-              <div className="flex flex-col items-center justify-center h-full">
-                <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mb-6">
-                  <Sparkles size={32} className="text-pink-500" />
-                </div>
-                <h2 className="text-xl font-bold text-gray-800 mb-2">
-                  Belum Ada Hasil
+            {scanResult ? (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                  Hasil Analisis Nutrisi
                 </h2>
-                <p className="text-sm text-gray-500 text-center">
-                  Upload foto makanan dan klik "Analisa Nutrisi" untuk melihat hasilnya
-                </p>
+                
+                {/* Kartu Nutrisi Utama (Kalori, Protein, Karbo, Lemak) */}
+                <div className="bg-pink-50 rounded-xl p-5 mb-6">
+                  <h3 className="font-semibold text-gray-800 mb-3 text-lg">
+                    {/* Nama Makanan dari Backend jika tersedia: {analysisDetail?.komponen_makanan[0]?.nama} */}
+                    Informasi Nutrisi
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Kalori */}
+                    <div className="bg-white rounded-lg p-3 border border-pink-100">
+                      <p className="text-xs text-gray-500">Kalori</p>
+                      <p className="text-xl font-bold text-pink-600">
+                        {scanResult.calories} kal
+                      </p>
+                    </div>
+                    {/* Protein */}
+                    <div className="bg-white rounded-lg p-3 border border-pink-100">
+                      <p className="text-xs text-gray-500">Protein</p>
+                      <p className="text-xl font-bold text-pink-600">
+                        {scanResult.protein}g
+                      </p>
+                    </div>
+                    {/* Karbohidrat */}
+                    <div className="bg-white rounded-lg p-3 border border-pink-100">
+                      <p className="text-xs text-gray-500">Karbohidrat</p>
+                      <p className="text-xl font-bold text-pink-600">
+                        {scanResult.carbs}g
+                      </p>
+                    </div>
+                    {/* Lemak */}
+                    <div className="bg-white rounded-lg p-3 border border-pink-100">
+                      <p className="text-xs text-gray-500">Lemak</p>
+                      <p className="text-xl font-bold text-pink-600">
+                        {scanResult.fat}g
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Saran Gizi */}
+                <div className="bg-teal-50 border-l-4 border-teal-500 rounded-lg p-4 shadow-sm">
+                    <h4 className="font-bold text-teal-800 mb-2 flex items-center">
+                        <Heart size={16} className="mr-2 fill-teal-500 text-teal-800" /> Saran SmartMom
+                    </h4>
+                    <p className="text-sm text-gray-700">
+                        {analysisDetail?.saran_gizi_singkat || "Tidak ada saran gizi yang tersedia dari analisis ini."}
+                    </p>
+                </div>
+                
+                {/* Tombol Scan Lagi */}
+                <button
+                  onClick={handleClear}
+                  className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors mt-4"
+                >
+                  Scan Lagi
+                </button>
               </div>
             ) : (
-              <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-4">
-                  Hasil Analisis
-                </h2>
-                <div className="aspect-video bg-gray-100 rounded-2xl overflow-hidden mb-4">
-                  <img
-                    src={selectedFile}
-                    alt="Food"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {scanResult ? (
-                  <div className="space-y-4">
-                    <div className="bg-pink-50 rounded-xl p-4">
-                      <h3 className="font-semibold text-gray-800 mb-3">
-                        Informasi Nutrisi
-                      </h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-white rounded-lg p-3">
-                          <p className="text-xs text-gray-500">Kalori</p>
-                          <p className="text-lg font-bold text-pink-600">
-                            {scanResult.calories} kal
-                          </p>
-                        </div>
-                        <div className="bg-white rounded-lg p-3">
-                          <p className="text-xs text-gray-500">Protein</p>
-                          <p className="text-lg font-bold text-pink-600">
-                            {scanResult.protein}g
-                          </p>
-                        </div>
-                        <div className="bg-white rounded-lg p-3">
-                          <p className="text-xs text-gray-500">Karbohidrat</p>
-                          <p className="text-lg font-bold text-pink-600">
-                            {scanResult.carbs}g
-                          </p>
-                        </div>
-                        <div className="bg-white rounded-lg p-3">
-                          <p className="text-xs text-gray-500">Lemak</p>
-                          <p className="text-lg font-bold text-pink-600">
-                            {scanResult.fat}g
-                          </p>
-                        </div>
-                      </div>
+              <div className="flex flex-col items-center justify-center h-full text-center py-20">
+                {isScanning ? (
+                    // Tampilan Loading
+                    <div className="pb-20">
+                        <div className="animate-spin rounded-full h-16 w-16 border-4 border-pink-500 border-t-transparent mx-auto mb-6"></div>
+                        <p className="text-lg font-semibold text-pink-600">Sedang Menganalisa...</p>
+                        <p className="text-sm text-gray-500">Mohon tunggu sebentar.</p>
                     </div>
-                    <button
-                      onClick={() => {
-                        setSelectedFile(null);
-                        setScanResult(null);
-                      }}
-                      className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors"
-                    >
-                      Scan Lagi
-                    </button>
-                  </div>
                 ) : (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent"></div>
-                  </div>
+                    // Tampilan Belum Ada Hasil
+                    <div className="pb-20">
+                        <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <Sparkles size={32} className="text-pink-500" />
+                        </div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-2">
+                            Belum Ada Hasil
+                        </h2>
+                        <p className="text-sm text-gray-500">
+                            Upload foto makanan dan klik "Analisa Nutrisi" untuk melihat hasilnya
+                        </p>
+                    </div>
                 )}
               </div>
             )}
           </div>
         </div>
 
-        {/* Activity Section */}
+        {/* Activity Section (Tetap sama) */}
         <div className="mt-8 bg-white rounded-3xl p-8 shadow-sm">
           <h2 className="text-xl font-bold text-gray-800 mb-6">
             Aktivitas Hari Ini
