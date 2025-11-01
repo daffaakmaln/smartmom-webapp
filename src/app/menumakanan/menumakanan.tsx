@@ -10,7 +10,6 @@ import {
   Bookmark,
   Bell,
   Search,
-  User,
   Star,
   Check
 } from "lucide-react";

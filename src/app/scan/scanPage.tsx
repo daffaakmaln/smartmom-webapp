@@ -190,7 +190,7 @@ export default function ScanPage() {
                 </div>
                 <p className="text-gray-700 font-medium mb-3">Foto Terpilih</p>
                 <p className="text-sm text-gray-500 mb-6">
-                  Pilih foto makanan dan tekan "Analisa Nutrisi" di bawah.
+                  Pilih foto makanan dan tekan Analisa Nutrisi di bawah.
                 </p>
               </div>
             ) : (
