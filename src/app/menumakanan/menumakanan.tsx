@@ -15,7 +15,7 @@ import {
   Check
 } from "lucide-react";
 
-export default function Menumakanan() {
+export default function MenuMakanan() {
   const [savedMenus, setSavedMenus] = useState<number[]>([]);
 
   // Sample menu data
