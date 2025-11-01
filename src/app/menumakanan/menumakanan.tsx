@@ -108,7 +108,7 @@ export default function Menumakanan() {
               <Search size={20} className="text-gray-600" />
             </button>
             <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-xs lg:text-sm font-semibold">N</span>
+              <span className="text-white text-xs lg:text-sm font-semibold">R</span>
             </div>
           </div>
         </div>

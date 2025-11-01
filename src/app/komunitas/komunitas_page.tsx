@@ -87,9 +87,9 @@ export default function KomunitasPage() {
       <div className="bg-white border-b border-gray-200 px-4 lg:px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-xl lg:text-2xl font-bold text-gray-800">Komunitas SmartMom</h1>
+            <h1 className="text-xl lg:text-2xl font-bold text-gray-800">S-Moms Community</h1>
             <p className="text-xs lg:text-sm text-gray-500 mt-1">
-              Tempat berbagi cerita, bertanya, dan saling mendukung sesama ibu hamil
+              Tempat berbagi cerita, bertanya, dan saling mendukung sesama S-Moms
             </p>
           </div>
           <div className="flex items-center gap-2 lg:gap-3">
@@ -115,19 +115,19 @@ export default function KomunitasPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
               <div className="flex gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-sm font-semibold">IR</span>
+                  <span className="text-white text-sm font-semibold">R</span>
                 </div>
                 <div className="flex-1">
                   <div className="mb-3">
-                    <p className="font-semibold text-gray-800">Ibu Rani</p>
-                    <p className="text-xs text-gray-500">Kehamilan Minggu ke-24</p>
+                    <p className="font-semibold text-black">Ibu Rani</p>
+                    <p className="text-xs text-gray-500"></p>
                   </div>
                   <textarea
                     value={postText}
                     onChange={(e) => setPostText(e.target.value)}
                     placeholder="Bagikan cerita atau tanyakan sesuatu..."
                     rows={4}
-                    className="w-full px-4 py-3 bg-pink-50 border border-pink-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all resize-none text-sm"
+                    className="w-full px-4 py-3 bg-pink-50 border border-pink-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all resize-none text-sm text-gray-700"
                   />
                   <div className="flex justify-end mt-3">
                     <button
