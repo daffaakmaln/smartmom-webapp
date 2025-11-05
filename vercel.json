@@ -1,12 +1,11 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "backend/api.py",
-      "use": "@vercel/python"
-    }
+    { "src": "backend/api.py", "use": "@vercel/python" },
+    { "src": "next.config.ts", "use": "@vercel/next" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "backend/api.py" }
+    { "src": "/analyze-food", "dest": "backend/api.py" },
+    { "src": "/(.*)", "dest": "/" }
   ]
 }

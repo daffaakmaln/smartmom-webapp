@@ -17,6 +17,14 @@ import re
 # --- 1. KONFIGURASI AWAL DAN PENGATURAN AI ---
 app = FastAPI()
 
+@app.get("/")
+def read_root():
+    return {"status": "Backend FastAPI aktif 🚀"}
+
+@app.get("/health")
+def health_check():
+    return {"ok": True}
+
 # Load environment variables
 load_dotenv() 
 
