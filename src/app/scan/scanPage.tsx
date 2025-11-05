@@ -1,5 +1,4 @@
 // smartmom-webapp/src/app/scan/ScanPage.tsx
-
 "use client";
 
 import { useState, ChangeEvent, useEffect } from "react";
@@ -11,8 +10,6 @@ import {
   X,
   Bell,
   Search,
-  User,
-  CheckCircle,
   RefreshCcw,
   AlertTriangle,
   Heart,
@@ -41,6 +38,7 @@ interface HasilKartu {
 }
 
 const API_URL = "http://localhost:8000/analyze-food/";
+
 
 export default function ScanPage() {
   // Semua hooks harus di atas tanpa kondisi
@@ -82,46 +80,53 @@ export default function ScanPage() {
   };
 
   const handleAnalyze = async () => {
-    if (!fileObject) {
-      setError("Tidak ada file gambar yang dipilih.");
-      return;
-    }
+  if (!fileObject) {
+    setError("Tidak ada file gambar yang dipilih.");
+    return;
+  }
 
-    setIsScanning(true);
-    setError(null);
+  setIsScanning(true);
+  setError(null);
 
+  try {
     const formData = new FormData();
     formData.append("file", fileObject);
 
-    try {
-      const response = await axios.post<HasilAnalisis>(API_URL, formData);
-      const data = response.data;
-
-      const totalCalories = data.total_kalori_kcal;
-      const totalProtein = data.komponen_makanan.reduce((sum, item) => sum + item.protein_g, 0);
-      const totalCarbs = data.komponen_makanan.reduce((sum, item) => sum + item.karbohidrat_g, 0);
-      const totalFat = data.komponen_makanan.reduce((sum, item) => sum + item.lemak_g, 0);
-
-      setScanResult({
-        calories: totalCalories,
-        protein: Math.round(totalProtein),
-        carbs: Math.round(totalCarbs),
-        fat: Math.round(totalFat),
-      });
-
-      setAnalysisDetail(data);
-    } catch (err) {
-      console.error("Kesalahan Analisis:", err);
-      if (isAxiosError(err) && err.response) {
-        setError(`Error ${err.response.status}: ${err.response.data.detail || "Terjadi kesalahan server."}`);
-      } else {
-        setError("Koneksi gagal. Pastikan server FastAPI (Python) berjalan di port 8000.");
+    const response = await axios.post<HasilAnalisis>(
+      `${process.env.NEXT_PUBLIC_API_URL}/analyze-food/`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
       }
-    } finally {
-      setIsScanning(false);
-    }
-  };
+    );
 
+    console.log("✅ Response dari backend:", response.data);
+
+    // ⬇️ TAMBAHKAN INI: Set data ke state
+    const data = response.data;
+    
+    setScanResult({
+      calories: data.total_kalori_kcal,
+      protein: data.komponen_makanan.reduce((sum, k) => sum + k.protein_g, 0),
+      carbs: data.komponen_makanan.reduce((sum, k) => sum + k.karbohidrat_g, 0),
+      fat: data.komponen_makanan.reduce((sum, k) => sum + k.lemak_g, 0),
+    });
+    
+    setAnalysisDetail(data);
+
+  } catch (err) {
+    console.error("❌ Gagal memanggil API:", err);
+    
+    // ⬇️ PERBAIKI: Error handling lebih detail
+    if (isAxiosError(err)) {
+      setError(err.response?.data?.detail || "Gagal menganalisis gambar. Coba lagi.");
+    } else {
+      setError("Terjadi kesalahan. Pastikan backend berjalan di localhost:8000");
+    }
+  } finally {
+    setIsScanning(false);
+  }
+};
   const isFileReady = selectedFile && !isScanning;
 
   // Return baru di sini (tidak sebelum hooks)
@@ -358,8 +363,7 @@ export default function ScanPage() {
                       Belum Ada Hasil
                     </h2>
                     <p className="text-sm text-gray-500">
-                      Upload foto makanan dan klik "Analisa Nutrisi" untuk
-                      melihat hasilnya
+                      Upload foto makanan dan klik Analisa Nutrisi untuk melihat hasilnya
                     </p>
                   </div>
                 )}
