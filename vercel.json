@@ -1,10 +1,20 @@
 {
   "version": 2,
+  "installCommand": "pnpm install",
   "builds": [
-    { "src": "backend/**/*.py", "use": "@vercel/python" }
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "backend/api.py",
+      "use": "@vercel/python"
+    }
   ],
   "routes": [
-    { "src": "/analyze-food", "dest": "backend/api.py" },
-    { "src": "/(.*)", "dest": "/" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/backend/api.py"
+    }
   ]
 }
