@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json", 
+      "use": "@vercel/next"
+    },
+    {
+      "src": "src/api/api.py", 
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",     
+      "dest": "src/api/api.py"  
+    },
+    {
+      "src": "/analyze-food/(.*)",  
+      "dest": "src/api/api.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"            
+    }
+  ]
+}

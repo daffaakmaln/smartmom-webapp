@@ -1,4 +1,4 @@
-// smartmom-webapp/src/app/scan/ScanPage.tsx
+// src/app/scan/ScanPage.tsx
 "use client";
 
 import { useState, ChangeEvent, useEffect } from "react";
@@ -12,9 +12,10 @@ import {
   Search,
   RefreshCcw,
   AlertTriangle,
-  Heart,
+  Heart, // Pastikan Heart diimpor
 } from "lucide-react";
 
+// --- INTERFACE (Disalin dari backend/api/index.py) ---
 interface KomponenGizi {
   nama: string;
   porsi: string;
@@ -36,12 +37,16 @@ interface HasilKartu {
   carbs: number;
   fat: number;
 }
+// ----------------------------------------------------
 
-const API_URL = "http://localhost:8000/analyze-food/";
+// Menggunakan Environment Variable untuk URL API
+// Pastikan NEXT_PUBLIC_API_URL telah diatur di .env (misalnya, http://localhost:8000)
+// Jika tidak disetel, fallback ke localhost:8000
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_ANALYZE_URL = `${API_BASE_URL}/analyze-food/`;
 
 
 export default function ScanPage() {
-  // Semua hooks harus di atas tanpa kondisi
   const [fileObject, setFileObject] = useState<File | null>(null);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -50,8 +55,9 @@ export default function ScanPage() {
   const [analysisDetail, setAnalysisDetail] = useState<HasilAnalisis | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Aman: efek tidak mengubah urutan hook
-  useEffect(() => {setIsMounted(true);}, []);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const activities = [
     { name: "Ayam Bakar", time: "1 jam lalu", status: "good" },
@@ -73,6 +79,7 @@ export default function ScanPage() {
 
   const handleClear = () => {
     setFileObject(null);
+    selectedFile && URL.revokeObjectURL(selectedFile); // Bersihkan Object URL
     setSelectedFile(null);
     setScanResult(null);
     setAnalysisDetail(null);
@@ -80,59 +87,63 @@ export default function ScanPage() {
   };
 
   const handleAnalyze = async () => {
-  if (!fileObject) {
-    setError("Tidak ada file gambar yang dipilih.");
-    return;
-  }
-
-  setIsScanning(true);
-  setError(null);
-
-  try {
-    const formData = new FormData();
-    formData.append("file", fileObject);
-
-    const response = await axios.post<HasilAnalisis>(
-      `${process.env.NEXT_PUBLIC_API_URL}/analyze-food/`,
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
-
-    console.log("✅ Response dari backend:", response.data);
-
-    // ⬇️ TAMBAHKAN INI: Set data ke state
-    const data = response.data;
-    
-    setScanResult({
-      calories: data.total_kalori_kcal,
-      protein: data.komponen_makanan.reduce((sum, k) => sum + k.protein_g, 0),
-      carbs: data.komponen_makanan.reduce((sum, k) => sum + k.karbohidrat_g, 0),
-      fat: data.komponen_makanan.reduce((sum, k) => sum + k.lemak_g, 0),
-    });
-    
-    setAnalysisDetail(data);
-
-  } catch (err) {
-    console.error("❌ Gagal memanggil API:", err);
-    
-    // ⬇️ PERBAIKI: Error handling lebih detail
-    if (isAxiosError(err)) {
-      setError(err.response?.data?.detail || "Gagal menganalisis gambar. Coba lagi.");
-    } else {
-      setError("Terjadi kesalahan. Pastikan backend berjalan di localhost:8000");
+    if (!fileObject) {
+      setError("Tidak ada file gambar yang dipilih.");
+      return;
     }
-  } finally {
-    setIsScanning(false);
-  }
-};
+
+    setIsScanning(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", fileObject);
+
+      // Menggunakan API_ANALYZE_URL yang sudah didefinisikan dengan ENV/Fallback
+      const response = await axios.post<HasilAnalisis>(
+        API_ANALYZE_URL,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          // Timeout ditambahkan untuk menghindari menunggu selamanya di Vercel/Serverless
+          timeout: 20000 // 20 detik
+        }
+      );
+
+      console.log("✅ Response dari backend diterima.");
+
+      const data = response.data;
+
+      // PERBAIKAN: Perhitungan Makro dan Pembulatan
+      setScanResult({
+        calories: Math.round(data.total_kalori_kcal),
+        protein: Math.round(data.komponen_makanan.reduce((sum, k) => sum + k.protein_g, 0)),
+        carbs: Math.round(data.komponen_makanan.reduce((sum, k) => sum + k.karbohidrat_g, 0)),
+        fat: Math.round(data.komponen_makanan.reduce((sum, k) => sum + k.lemak_g, 0)),
+      });
+
+      setAnalysisDetail(data);
+
+    } catch (err) {
+      console.error("❌ Gagal memanggil API:", err);
+
+      if (isAxiosError(err)) {
+        // Mendapatkan detail error dari FastAPI/Vercel
+        const detail = err.response?.data?.detail || err.message; 
+        setError(`Error API: ${detail}. Pastikan backend berjalan di ${API_BASE_URL}`);
+      } else {
+        setError("Terjadi kesalahan tak terduga saat menganalisis.");
+      }
+    } finally {
+      setIsScanning(false);
+    }
+  };
+  
   const isFileReady = selectedFile && !isScanning;
 
-  // Return baru di sini (tidak sebelum hooks)
   if (!isMounted) return null;
 
-  // --- RENDER UI (Bagian yang sudah Anda buat) ---
+  // --- RENDER UI ---
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header (Dipertahankan) */}
@@ -140,8 +151,7 @@ export default function ScanPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Scan AI Nutrisi</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Upload foto makanan dan dapatkan analisis nutrisi secara instan
-            dengan AI
+            Upload foto makanan dan dapatkan analisis nutrisi secara instan dengan AI
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -282,7 +292,6 @@ export default function ScanPage() {
                 {/* Kartu Nutrisi Utama (Kalori, Protein, Karbo, Lemak) */}
                 <div className="bg-pink-50 rounded-xl p-5 mb-6">
                   <h3 className="font-semibold text-gray-800 mb-3 text-lg">
-                    {/* Nama Makanan dari Backend jika tersedia: {analysisDetail?.komponen_makanan[0]?.nama} */}
                     Informasi Nutrisi
                   </h3>
                   <div className="grid grid-cols-2 gap-3">
