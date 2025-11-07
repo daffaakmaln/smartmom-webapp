@@ -15,7 +15,7 @@ export default function Hero() {
           yakin selama kehamilan.
         </p>
         <div className="flex gap-4 mb-8">
-          <Link href="/dashboard">
+          <Link href="/auth">
             <button className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition">
               Mulai Sekarang →
             </button>
