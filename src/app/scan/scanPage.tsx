@@ -42,8 +42,8 @@ interface HasilKartu {
 // Menggunakan Environment Variable untuk URL API
 // Pastikan NEXT_PUBLIC_API_URL telah diatur di .env (misalnya, http://localhost:8000)
 // Jika tidak disetel, fallback ke localhost:8000
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-const API_ANALYZE_URL = `${API_BASE_URL}/analyze-food/`;
+// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// const API_ANALYZE_URL = `${API_BASE_URL}/analyze-food/`;
 
 
 export default function ScanPage() {
