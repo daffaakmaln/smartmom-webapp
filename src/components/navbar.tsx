@@ -5,11 +5,32 @@ import { motion } from "framer-motion";
 
 const navItems = ["Home", "Fitur", "Testimoni", "Contact Us"];
 
-export default function Navbar() {
+interface NavbarProps {
+  onScrollToFeature: () => void;
+  onScrollToTestimonial: () => void;
+  onScrollToHero: () => void;
+}
+
+export default function Navbar({ onScrollToFeature, onScrollToTestimonial, onScrollToHero }: NavbarProps) {
   const [active, setActive] = useState("Home");
 
+  const handleClick = (item: string) => {
+  setActive(item);
+
+  if (item === "Fitur") {
+    onScrollToFeature();
+  } else if (item === "Testimoni") {
+    const target = document.getElementById("testimoni");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  } else if (item === "Home") {
+    onScrollToHero();
+  }
+};
+
   return (
-    <nav className="flex justify-between items-center py-5 px-6 md:px-20 bg-white shadow-sm relative">
+    <nav className="flex justify-between items-center py-5 px-6 md:px-20 bg-white shadow-sm sticky top-0 z-50">
       {/* Logo */}
       <div className="flex items-center gap-2">
         <img src="/logo.png" className="w-15 h-15 rounded-full border-2 border-white" alt="logo" />
@@ -21,7 +42,7 @@ export default function Navbar() {
         {navItems.map((item) => (
           <button
             key={item}
-            onMouseEnter={() => setActive(item)}
+            onClick={() => handleClick(item)}
             className="relative z-10 px-5 py-2 text-gray-700 font-medium rounded-full transition-colors duration-200"
           >
             {active === item && (

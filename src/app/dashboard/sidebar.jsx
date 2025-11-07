@@ -39,7 +39,7 @@ const menu = [
 const currentNews = {
   title: "Tips Nutrisi Terbaik untuk Trimester Kedua!",
   image:
-    "https://via.placeholder.com/600x300/F472B6/FFFFFF?text=Berita+Terkini", // Ganti dengan URL gambar berita Anda
+    "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80", // Ganti dengan URL gambar berita Anda
   description:
     "Selamat datang kembali! Jangan lewatkan artikel terbaru kami mengenai **pentingnya asam folat dan zat besi** untuk perkembangan optimal janin di usia kandungan 4 hingga 6 bulan. Baca selengkapnya di menu **Artikel & Edukasi**.",
 };

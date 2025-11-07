@@ -138,7 +138,10 @@ const SmartMomTestimonials: React.FC = () => {
   }, [isPaused, totalWidth]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white py-16 px-4">
+    <section
+    id="testimoni"
+    className="min-h-screen bg-gradient-to-b from-pink-50 to-white py-16 px-4 scroll-mt-24"
+  >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -211,7 +214,7 @@ const SmartMomTestimonials: React.FC = () => {
           • Hover untuk berhenti •
         </p>
       </div>
-    </div>
+    </section>
   );
 };
 

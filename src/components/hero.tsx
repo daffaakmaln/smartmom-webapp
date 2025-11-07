@@ -1,8 +1,20 @@
 "use client";
 import Link from "next/link";
 import HeroImageCarousel from "./carousel_hero";
+import { useRef } from "react";
+import FeatureSection from "./feature_section";
+import { on } from "events";
 
-export default function Hero() {
+interface HeroProps {
+  onScrollToFeature: () => void;
+}
+
+export default function Hero({ onScrollToFeature }: HeroProps) {
+  const featureRef = useRef<HTMLDivElement | null>(null);
+
+  const handleScroll = () => {
+    featureRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <section className="flex flex-col-reverse md:flex-row justify-between items-center px-6 md:px-20 py-12">
       {/* Left Side */}
@@ -20,7 +32,10 @@ export default function Hero() {
               Mulai Sekarang →
             </button>
           </Link>
-          <button className="bg-pink-500 text-white px-6 py-3 rounded-full hover:bg-pink-600 transition">
+          <button
+            onClick={onScrollToFeature}
+            className="bg-pink-500 text-white px-6 py-3 rounded-full hover:bg-pink-600 transition"
+          >
             Lihat Fitur
           </button>
         </div>

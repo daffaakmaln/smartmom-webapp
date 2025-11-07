@@ -1,8 +1,8 @@
-import React from 'react';
+// feature_section.tsx
+import React, { forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import FeatureCard from './feature_card';
 import { Apple, Calendar, BookOpen, Users, Stethoscope, NotebookPen } from 'lucide-react';
-import { b } from 'framer-motion/client';
 
 const features = [
   {
@@ -49,19 +49,20 @@ const features = [
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
+// const containerVariants = {
+//   hidden: { opacity: 0 },
+//   visible: {
+//     opacity: 1,
+//     transition: {
+//       staggerChildren: 0.15,
+//     },
+//   },
+// };
 
-export default function FeatureSection() {
+// ✅ forwardRef agar bisa di-scroll dari parent
+const FeatureSection = forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <section className="bg-pink-50 py-12 px-6">
+    <section id="Fitur" ref={ref} className="bg-pink-50 py-12 px-6 md:px-20">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -70,33 +71,20 @@ export default function FeatureSection() {
           className="text-center mb-10"
         >
           <h2 className="text-2xl font-bold text-gray-800">Fitur Utama</h2>
-          <p className="text-gray-600 mt-2">Semua yang Ibu Butuhkan, Dalam Satu Platform</p>
+          <p className="text-gray-600 mt-2">
+            Semua yang Ibu Butuhkan, Dalam Satu Platform
+          </p>
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
-        >
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
-            <FeatureCard
-              key={index}
-              title={feature.title}
-              description={feature.description}
-              icon={
-                <span
-                  className="rounded-lg p-2 inline-flex"
-                  style={{ backgroundColor: feature.bgColor }}
-                >
-                  {feature.icon}
-                </span>
-              }
-            />
+            <FeatureCard key={index} {...feature} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
-}
+});
+
+FeatureSection.displayName = "FeatureSection";
+export default FeatureSection;
