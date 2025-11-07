@@ -150,6 +150,8 @@ export default function ScanPage() {
       }
     }, 2000); // Simulasi delay 2 detik
   };
+
+  // Validasi apakah file siap untuk dianalisis
   
   const isFileReady = selectedFile && !isScanning;
 
