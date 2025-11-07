@@ -95,48 +95,60 @@ export default function ScanPage() {
     setIsScanning(true);
     setError(null);
 
-    try {
-      const formData = new FormData();
-      formData.append("file", fileObject);
+    // SIMULASI LOADING - Menggunakan Data Dummy
+    setTimeout(() => {
+      try {
+        // DATA DUMMY untuk simulasi
+        const dummyData: HasilAnalisis = {
+          total_kalori_kcal: 650,
+          komponen_makanan: [
+            {
+              nama: "Nasi Putih",
+              porsi: "1 piring (200g)",
+              kalori_kcal: 260,
+              protein_g: 5.3,
+              lemak_g: 0.5,
+              karbohidrat_g: 56.0
+            },
+            {
+              nama: "Ayam Goreng",
+              porsi: "1 potong (100g)",
+              kalori_kcal: 290,
+              protein_g: 28.0,
+              lemak_g: 18.0,
+              karbohidrat_g: 3.0
+            },
+            {
+              nama: "Sayur Tumis",
+              porsi: "1 mangkok (150g)",
+              kalori_kcal: 100,
+              protein_g: 3.0,
+              lemak_g: 5.0,
+              karbohidrat_g: 12.0
+            }
+          ],
+          saran_gizi_singkat: "Makanan ini cukup seimbang! Tinggi protein dari ayam baik untuk pertumbuhan. Namun, perhatikan asupan lemak dari gorengan. Tambahkan lebih banyak sayuran untuk serat dan vitamin yang optimal."
+        };
 
-      // Menggunakan API_ANALYZE_URL yang sudah didefinisikan dengan ENV/Fallback
-      const response = await axios.post<HasilAnalisis>(
-        API_ANALYZE_URL,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          // Timeout ditambahkan untuk menghindari menunggu selamanya di Vercel/Serverless
-          timeout: 20000 // 20 detik
-        }
-      );
+        console.log("✅ Menggunakan data dummy untuk simulasi.");
 
-      console.log("✅ Response dari backend diterima.");
+        // Perhitungan Makro dan Pembulatan
+        setScanResult({
+          calories: Math.round(dummyData.total_kalori_kcal),
+          protein: Math.round(dummyData.komponen_makanan.reduce((sum, k) => sum + k.protein_g, 0)),
+          carbs: Math.round(dummyData.komponen_makanan.reduce((sum, k) => sum + k.karbohidrat_g, 0)),
+          fat: Math.round(dummyData.komponen_makanan.reduce((sum, k) => sum + k.lemak_g, 0)),
+        });
 
-      const data = response.data;
+        setAnalysisDetail(dummyData);
 
-      // PERBAIKAN: Perhitungan Makro dan Pembulatan
-      setScanResult({
-        calories: Math.round(data.total_kalori_kcal),
-        protein: Math.round(data.komponen_makanan.reduce((sum, k) => sum + k.protein_g, 0)),
-        carbs: Math.round(data.komponen_makanan.reduce((sum, k) => sum + k.karbohidrat_g, 0)),
-        fat: Math.round(data.komponen_makanan.reduce((sum, k) => sum + k.lemak_g, 0)),
-      });
-
-      setAnalysisDetail(data);
-
-    } catch (err) {
-      console.error("❌ Gagal memanggil API:", err);
-
-      if (isAxiosError(err)) {
-        // Mendapatkan detail error dari FastAPI/Vercel
-        const detail = err.response?.data?.detail || err.message; 
-        setError(`Error API: ${detail}. Pastikan backend berjalan di ${API_BASE_URL}`);
-      } else {
-        setError("Terjadi kesalahan tak terduga saat menganalisis.");
+      } catch (err) {
+        console.error("❌ Error pada simulasi:", err);
+        setError("Terjadi kesalahan saat memproses data dummy.");
+      } finally {
+        setIsScanning(false);
       }
-    } finally {
-      setIsScanning(false);
-    }
+    }, 2000); // Simulasi delay 2 detik
   };
   
   const isFileReady = selectedFile && !isScanning;

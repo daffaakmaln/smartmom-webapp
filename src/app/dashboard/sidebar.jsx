@@ -25,11 +25,7 @@ const menu = [
   { name: "Artikel & Edukasi", icon: <Globe size={20} />, href: "/artikel" },
   { name: "Komunitas Ibu", icon: <Users size={20} />, href: "/komunitas" },
   { name: "Konsultasi", icon: <Stethoscope size={20} />, href: "/konsultasi" },
-  {
-    name: "Pengaturan Akun",
-    icon: <Settings size={20} />,
-    href: "/pengaturan",
-  },
+  { name: "Pengaturan Akun", icon: <Settings size={20} />, href: "/pengaturan" },
 ];
 
 export default function Sidebar() {
