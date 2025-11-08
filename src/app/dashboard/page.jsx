@@ -2,10 +2,10 @@
 import { Apple, Activity, Baby, Wheat } from "lucide-react";
 import Link from "next/link";
 import Sidebar from "../dashboard/sidebar";
-import Header from "../dashboard/header";
 import CardStat from "../dashboard/card_stat";
 import TipsCard from "../dashboard/tips_card";
 import ActivityList from "../dashboard/activity_list";
+import PageHeader from "@/components/header_page";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       <Sidebar />
       {/* Main Content */}
       <main className="flex-1 p-6 sm:p-8 md:ml-64">
-        <Header />
+        <PageHeader />
         {/* Cards Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Card Status Nutrisi - Clickable */}
@@ -59,7 +59,7 @@ export default function Home() {
           </Link>
           
           {/* Card Menu - Clickable */}
-          <Link href="/menumakanan" className="block">
+          <Link href="/menumakananx   " className="block">
             <div className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl">
               <CardStat
                 icon={<Wheat className="w-6 h-6 text-yellow-500" />}

@@ -14,6 +14,7 @@ import {
   AlertTriangle,
   Heart, // Pastikan Heart diimpor
 } from "lucide-react";
+import PageHeader from "@/components/header_page";
 
 // --- INTERFACE (Disalin dari backend/api/index.py) ---
 interface KomponenGizi {
@@ -161,27 +162,11 @@ export default function ScanPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header (Dipertahankan) */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Scan AI Nutrisi</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Upload foto makanan dan dapatkan analisis nutrisi secara instan dengan AI
-          </p>
-        </div>
-        <div className="flex items-center gap-4">
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <Bell size={20} className="text-gray-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <Search size={20} className="text-gray-600" />
-          </button>
-          <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs lg:text-sm font-semibold">
-              R
-            </span>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Scan AI Nutrisi"
+        description="Upload foto makanan dan dapatkan analisis nutrisi secara instan dengan AI"
+        userName="Rani"
+      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
