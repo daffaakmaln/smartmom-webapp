@@ -14,7 +14,7 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-1 p-6 sm:p-8 md:ml-64">
         <PageHeader 
-          title="Dashboard Utama"
+          title="Selamat Datang, Ibu Rani!"
           description="Ringkasan kesehatan dan aktivitas harian Anda"
           userName="Rani"
         />
