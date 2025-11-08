@@ -18,6 +18,7 @@ export default function Home() {
           title="Selamat Datang, Ibu Rani! "
           description="Pantau kesehatan dan aktivitas harian Anda."
           userName="Rani"
+          isPremium={true}
         />
 
         {/* Cards Section */}

@@ -8,13 +8,15 @@ interface PageHeaderProps {
   description: string;
   userName?: string; // Opsional, default "R"
   showSubscription?: boolean; // Opsional, default true
+  isPremium?: boolean; // Status langganan premium
 }
 
 export default function PageHeader({ 
   title, 
   description, 
   userName = "R",
-  showSubscription = true 
+  showSubscription = true,
+  isPremium = false
 }: PageHeaderProps) {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
@@ -42,14 +44,24 @@ export default function PageHeader({
           <div className="flex items-center gap-2 lg:gap-3">
             {/* Subscription Button */}
             {showSubscription && (
-              <button 
-                onClick={handleSubscribe}
-                className="flex items-center gap-1 lg:gap-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-2 lg:px-4 py-1.5 lg:py-2 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-              >
-                <Crown size={16} className="lg:hidden" />
-                <Crown size={18} className="hidden lg:block" />
-                <span className="text-xs lg:text-sm">Premium</span>
-              </button>
+              isPremium ? (
+                // Button untuk user yang sudah premium
+                <div className="flex items-center gap-1 lg:gap-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-2 lg:px-4 py-1.5 lg:py-2 rounded-full font-semibold shadow-md">
+                  <Crown size={16} className="lg:hidden" />
+                  <Crown size={18} className="hidden lg:block" />
+                  <span className="text-xs lg:text-sm">S-Mom Pro</span>
+                </div>
+              ) : (
+                // Button untuk user yang belum premium
+                <button 
+                  onClick={handleSubscribe}
+                  className="flex items-center gap-1 lg:gap-2 bg-gradient-to-r from-pink-400 to-pink-600 text-white px-2 lg:px-4 py-1.5 lg:py-2 rounded-full font-semibold hover:from-pink-500 hover:to-pink-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+                >
+                  <Crown size={16} className="lg:hidden" />
+                  <Crown size={18} className="hidden lg:block" />
+                  <span className="text-xs lg:text-sm">Premium</span>
+                </button>
+              )
             )}
 
             {/* Notification Button */}
