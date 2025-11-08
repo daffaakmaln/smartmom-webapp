@@ -2,21 +2,21 @@
 "use client";
 
 import { useState, ChangeEvent, useEffect } from "react";
-import axios, { isAxiosError } from "axios";
 import {
   Upload,
   Sparkles,
   Info,
   X,
-  Bell,
-  Search,
   RefreshCcw,
   AlertTriangle,
-  Heart, // Pastikan Heart diimpor
+  Heart,
+  Flame,
+  TrendingUp,
+  Calendar,
 } from "lucide-react";
 import PageHeader from "@/components/header_page";
 
-// --- INTERFACE (Disalin dari backend/api/index.py) ---
+// --- INTERFACE ---
 interface KomponenGizi {
   nama: string;
   porsi: string;
@@ -38,14 +38,13 @@ interface HasilKartu {
   carbs: number;
   fat: number;
 }
-// ----------------------------------------------------
 
-// Menggunakan Environment Variable untuk URL API
-// Pastikan NEXT_PUBLIC_API_URL telah diatur di .env (misalnya, http://localhost:8000)
-// Jika tidak disetel, fallback ke localhost:8000
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-// const API_ANALYZE_URL = `${API_BASE_URL}/analyze-food/`;
-
+interface ScanHistory {
+  id: string;
+  timestamp: string;
+  calories: number;
+  imageName: string;
+}
 
 export default function ScanPage() {
   const [fileObject, setFileObject] = useState<File | null>(null);
@@ -55,16 +54,19 @@ export default function ScanPage() {
   const [scanResult, setScanResult] = useState<HasilKartu | null>(null);
   const [analysisDetail, setAnalysisDetail] = useState<HasilAnalisis | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
+  // Data dummy untuk kalori harian
+  const [dailyCalories, setDailyCalories] = useState(1850); // Total kalori hari ini
+  const targetCalories = 2000; // Target kalori harian
+  const [scanHistory, setScanHistory] = useState<ScanHistory[]>([
+    { id: "1", timestamp: "08:00", calories: 450, imageName: "Sarapan - Nasi Goreng" },
+    { id: "2", timestamp: "13:00", calories: 750, imageName: "Makan Siang - Ayam Geprek" },
+    { id: "3", timestamp: "19:00", calories: 650, imageName: "Makan Malam - Soto Ayam" },
+  ]);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const activities = [
-    { name: "Ayam Bakar", time: "1 jam lalu", status: "good" },
-    { name: "Rendang Padang", time: "3 jam lalu", status: "warning" },
-    { name: "Sushi", time: "4 jam lalu", status: "danger" },
-  ];
 
   // Handler
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +82,7 @@ export default function ScanPage() {
 
   const handleClear = () => {
     setFileObject(null);
-    selectedFile && URL.revokeObjectURL(selectedFile); // Bersihkan Object URL
+    selectedFile && URL.revokeObjectURL(selectedFile);
     setSelectedFile(null);
     setScanResult(null);
     setAnalysisDetail(null);
@@ -96,10 +98,8 @@ export default function ScanPage() {
     setIsScanning(true);
     setError(null);
 
-    // SIMULASI LOADING - Menggunakan Data Dummy
     setTimeout(() => {
       try {
-        // DATA DUMMY untuk simulasi
         const dummyData: HasilAnalisis = {
           total_kalori_kcal: 650,
           komponen_makanan: [
@@ -131,17 +131,25 @@ export default function ScanPage() {
           saran_gizi_singkat: "Makanan ini cukup seimbang! Tinggi protein dari ayam baik untuk pertumbuhan. Namun, perhatikan asupan lemak dari gorengan. Tambahkan lebih banyak sayuran untuk serat dan vitamin yang optimal."
         };
 
-        console.log("✅ Menggunakan data dummy untuk simulasi.");
-
-        // Perhitungan Makro dan Pembulatan
-        setScanResult({
+        const resultData = {
           calories: Math.round(dummyData.total_kalori_kcal),
           protein: Math.round(dummyData.komponen_makanan.reduce((sum, k) => sum + k.protein_g, 0)),
           carbs: Math.round(dummyData.komponen_makanan.reduce((sum, k) => sum + k.karbohidrat_g, 0)),
           fat: Math.round(dummyData.komponen_makanan.reduce((sum, k) => sum + k.lemak_g, 0)),
-        });
+        };
 
+        setScanResult(resultData);
         setAnalysisDetail(dummyData);
+
+        // Update daily calories dan history
+        setDailyCalories(prev => prev + resultData.calories);
+        const newScan: ScanHistory = {
+          id: Date.now().toString(),
+          timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+          calories: resultData.calories,
+          imageName: fileObject?.name || "Makanan"
+        };
+        setScanHistory(prev => [...prev, newScan]);
 
       } catch (err) {
         console.error("❌ Error pada simulasi:", err);
@@ -149,28 +157,88 @@ export default function ScanPage() {
       } finally {
         setIsScanning(false);
       }
-    }, 2000); // Simulasi delay 2 detik
+    }, 2000);
   };
 
-  // Validasi apakah file siap untuk dianalisis
-  
   const isFileReady = selectedFile && !isScanning;
+  const caloriePercentage = (dailyCalories / targetCalories) * 100;
+  const remainingCalories = targetCalories - dailyCalories;
 
   if (!isMounted) return null;
 
-  // --- RENDER UI ---
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header (Dipertahankan) */}
       <PageHeader
         title="Scan AI Nutrisi"
         description="Upload foto makanan dan dapatkan analisis nutrisi secara instan dengan AI"
         userName="Rani"
       />
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Pesan Error Global */}
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8">
+        {/* Calorie Tracker Section */}
+        <div className="grid lg:grid-cols-3 gap-6 mb-8">
+          {/* Daily Calorie Card */}
+          <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-3xl p-6 text-white shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Kalori Hari Ini</h3>
+              <Flame size={24} />
+            </div>
+            <div className="mb-4">
+              <p className="text-4xl font-bold mb-1">{dailyCalories}</p>
+              <p className="text-pink-100 text-sm">dari {targetCalories} kkal</p>
+            </div>
+            {/* Progress Bar */}
+            <div className="bg-white/20 rounded-full h-3 overflow-hidden">
+              <div 
+                className="bg-white h-full rounded-full transition-all duration-500"
+                style={{ width: `${Math.min(caloriePercentage, 100)}%` }}
+              ></div>
+            </div>
+            <p className="text-xs text-pink-100 mt-2">
+              {remainingCalories > 0 
+                ? `Sisa ${remainingCalories} kkal lagi` 
+                : `Melebihi ${Math.abs(remainingCalories)} kkal`}
+            </p>
+          </div>
+
+          {/* Target Achievement */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">Target Harian</h3>
+              <TrendingUp size={24} className="text-green-500" />
+            </div>
+            <div className="mb-2">
+              <p className="text-3xl font-bold text-gray-800">{Math.round(caloriePercentage)}%</p>
+              <p className="text-gray-500 text-sm">Tercapai</p>
+            </div>
+            <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mt-2 ${
+              caloriePercentage >= 90 ? 'bg-green-100 text-green-700' :
+              caloriePercentage >= 70 ? 'bg-yellow-100 text-yellow-700' :
+              'bg-blue-100 text-blue-700'
+            }`}>
+              {caloriePercentage >= 90 ? 'Target Hampir Tercapai' :
+               caloriePercentage >= 70 ? 'Dalam Jalur' :
+               'Masih Perlu Makan'}
+            </div>
+          </div>
+
+          {/* Scan Count */}
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">Scan Hari Ini</h3>
+              <Calendar size={24} className="text-purple-500" />
+            </div>
+            <div className="mb-2">
+              <p className="text-3xl font-bold text-gray-800">{scanHistory.length}</p>
+              <p className="text-gray-500 text-sm">Makanan tercatat</p>
+            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              Rata-rata {Math.round(dailyCalories / scanHistory.length)} kkal per makanan
+            </p>
+          </div>
+        </div>
+
+        {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl flex items-start">
             <AlertTriangle size={20} className="mr-3 flex-shrink-0 mt-1" />
@@ -182,18 +250,12 @@ export default function ScanPage() {
         )}
 
         <div className="grid lg:grid-cols-2 gap-6">
-          {/* KARTU KIRI: UPLOAD & TIPS */}
+          {/* LEFT: UPLOAD & TIPS */}
           <div className="bg-white rounded-3xl p-8 shadow-sm">
-            {/* TAMPILAN FOTO TERPILIH */}
             {selectedFile ? (
               <div className="flex flex-col items-center">
                 <div className="relative w-full max-w-sm aspect-video rounded-2xl overflow-hidden mb-4">
-                  <img
-                    src={selectedFile}
-                    alt="Food"
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Tombol Hapus */}
+                  <img src={selectedFile} alt="Food" className="w-full h-full object-cover" />
                   <button
                     onClick={handleClear}
                     className="absolute top-2 right-2 bg-white text-gray-700 p-1 rounded-full shadow-md hover:bg-gray-200 transition-colors"
@@ -208,21 +270,17 @@ export default function ScanPage() {
                 </p>
               </div>
             ) : (
-              // TAMPILAN PLACEHOLDER AWAL
               <div className="flex flex-col items-center justify-center py-6">
                 <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mb-6">
                   <Upload size={32} className="text-pink-500" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-800 mb-2">
-                  Upload Foto Makanan
-                </h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Upload Foto Makanan</h2>
                 <p className="text-sm text-gray-500 text-center mb-6">
                   Pilih foto makanan dari galeri atau ambil foto baru
                 </p>
               </div>
             )}
 
-            {/* Kontrol Tombol */}
             <div className="flex flex-col items-center gap-3">
               <input
                 type="file"
@@ -238,13 +296,12 @@ export default function ScanPage() {
                 {selectedFile ? "Ganti Foto" : "Pilih Foto"}
               </label>
 
-              {/* Tombol Analisa Nutrisi */}
               <button
                 onClick={handleAnalyze}
                 disabled={!isFileReady || isScanning}
                 className={`w-full max-w-xs py-3 rounded-full font-bold transition-all flex items-center justify-center ${
                   isFileReady && !isScanning
-                    ? "bg-black text-white hover:bg-gray-800 shadow-xl"
+                    ? "bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 shadow-xl"
                     : "bg-gray-300 text-gray-600 cursor-not-allowed"
                 }`}
               >
@@ -257,7 +314,6 @@ export default function ScanPage() {
               </button>
             </div>
 
-            {/* Tips Section */}
             <div className="mt-8 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl p-6 text-white">
               <div className="flex items-start gap-3 mb-4">
                 <Info size={20} className="mt-1 flex-shrink-0" />
@@ -280,70 +336,47 @@ export default function ScanPage() {
             </div>
           </div>
 
-          {/* KARTU KANAN: HASIL ANALISIS */}
+          {/* RIGHT: ANALYSIS RESULT */}
           <div className="bg-white rounded-3xl p-8 shadow-sm">
             {scanResult ? (
               <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Hasil Analisis Nutrisi
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Hasil Analisis Nutrisi</h2>
 
-                {/* Kartu Nutrisi Utama (Kalori, Protein, Karbo, Lemak) */}
                 <div className="bg-pink-50 rounded-xl p-5 mb-6">
-                  <h3 className="font-semibold text-gray-800 mb-3 text-lg">
-                    Informasi Nutrisi
-                  </h3>
+                  <h3 className="font-semibold text-gray-800 mb-3 text-lg">Informasi Nutrisi</h3>
                   <div className="grid grid-cols-2 gap-3">
-                    {/* Kalori */}
                     <div className="bg-white rounded-lg p-3 border border-pink-100">
                       <p className="text-xs text-gray-500">Kalori</p>
-                      <p className="text-xl font-bold text-pink-600">
-                        {scanResult.calories} kal
-                      </p>
+                      <p className="text-xl font-bold text-pink-600">{scanResult.calories} kal</p>
                     </div>
-                    {/* Protein */}
                     <div className="bg-white rounded-lg p-3 border border-pink-100">
                       <p className="text-xs text-gray-500">Protein</p>
-                      <p className="text-xl font-bold text-pink-600">
-                        {scanResult.protein}g
-                      </p>
+                      <p className="text-xl font-bold text-pink-600">{scanResult.protein}g</p>
                     </div>
-                    {/* Karbohidrat */}
                     <div className="bg-white rounded-lg p-3 border border-pink-100">
                       <p className="text-xs text-gray-500">Karbohidrat</p>
-                      <p className="text-xl font-bold text-pink-600">
-                        {scanResult.carbs}g
-                      </p>
+                      <p className="text-xl font-bold text-pink-600">{scanResult.carbs}g</p>
                     </div>
-                    {/* Lemak */}
                     <div className="bg-white rounded-lg p-3 border border-pink-100">
                       <p className="text-xs text-gray-500">Lemak</p>
-                      <p className="text-xl font-bold text-pink-600">
-                        {scanResult.fat}g
-                      </p>
+                      <p className="text-xl font-bold text-pink-600">{scanResult.fat}g</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Saran Gizi */}
-                <div className="bg-teal-50 border-l-4 border-teal-500 rounded-lg p-4 shadow-sm">
+                <div className="bg-teal-50 border-l-4 border-teal-500 rounded-lg p-4 shadow-sm mb-4">
                   <h4 className="font-bold text-teal-800 mb-2 flex items-center">
-                    <Heart
-                      size={16}
-                      className="mr-2 fill-teal-500 text-teal-800"
-                    />{" "}
+                    <Heart size={16} className="mr-2 fill-teal-500 text-teal-800" />
                     Saran SmartMom
                   </h4>
                   <p className="text-sm text-gray-700">
-                    {analysisDetail?.saran_gizi_singkat ||
-                      "Tidak ada saran gizi yang tersedia dari analisis ini."}
+                    {analysisDetail?.saran_gizi_singkat || "Tidak ada saran gizi yang tersedia."}
                   </p>
                 </div>
 
-                {/* Tombol Scan Lagi */}
                 <button
                   onClick={handleClear}
-                  className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors mt-4"
+                  className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors"
                 >
                   Scan Lagi
                 </button>
@@ -351,25 +384,17 @@ export default function ScanPage() {
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-center py-20">
                 {isScanning ? (
-                  // Tampilan Loading
                   <div className="pb-20">
                     <div className="animate-spin rounded-full h-16 w-16 border-4 border-pink-500 border-t-transparent mx-auto mb-6"></div>
-                    <p className="text-lg font-semibold text-pink-600">
-                      Sedang Menganalisa...
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Mohon tunggu sebentar.
-                    </p>
+                    <p className="text-lg font-semibold text-pink-600">Sedang Menganalisa...</p>
+                    <p className="text-sm text-gray-500">Mohon tunggu sebentar.</p>
                   </div>
                 ) : (
-                  // Tampilan Belum Ada Hasil
                   <div className="pb-20">
                     <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mb-6 mx-auto">
                       <Sparkles size={32} className="text-pink-500" />
                     </div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-2">
-                      Belum Ada Hasil
-                    </h2>
+                    <h2 className="text-xl font-bold text-gray-800 mb-2">Belum Ada Hasil</h2>
                     <p className="text-sm text-gray-500">
                       Upload foto makanan dan klik Analisa Nutrisi untuk melihat hasilnya
                     </p>
@@ -380,43 +405,27 @@ export default function ScanPage() {
           </div>
         </div>
 
-        {/* Activity Section (Tetap sama) */}
+        {/* Scan History Section */}
         <div className="mt-8 bg-white rounded-3xl p-8 shadow-sm">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">
-            Aktivitas Hari Ini
-          </h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {activities.map((activity, idx) => (
+          <h2 className="text-xl font-bold text-gray-800 mb-6">Riwayat Scan Hari Ini</h2>
+          <div className="space-y-3">
+            {scanHistory.map((scan) => (
               <div
-                key={idx}
-                className={`relative rounded-2xl p-5 ${
-                  activity.status === "good"
-                    ? "bg-green-50"
-                    : activity.status === "warning"
-                    ? "bg-orange-50"
-                    : "bg-red-50"
-                }`}
+                key={scan.id}
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h3 className="font-semibold text-gray-800">
-                      {activity.name}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {activity.time}
-                    </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center">
+                    <Flame size={24} className="text-white" />
                   </div>
-                  <button
-                    className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                      activity.status === "good"
-                        ? "bg-green-500"
-                        : activity.status === "warning"
-                        ? "bg-orange-500"
-                        : "bg-red-500"
-                    }`}
-                  >
-                    <X size={14} className="text-white" />
-                  </button>
+                  <div>
+                    <p className="font-semibold text-gray-800">{scan.imageName}</p>
+                    <p className="text-xs text-gray-500">{scan.timestamp}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-bold text-pink-600">{scan.calories}</p>
+                  <p className="text-xs text-gray-500">kkal</p>
                 </div>
               </div>
             ))}

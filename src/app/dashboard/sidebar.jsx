@@ -18,21 +18,25 @@ import {
   AlertTriangle,
   Smile,
   Newspaper,
+  BabyIcon,
 } from "lucide-react";
 
 const menu = [
   { name: "Beranda", icon: <Home size={20} />, href: "/dashboard" },
   { name: "Scan AI Nutrisi", icon: <ScanHeart size={20} />, href: "/scan" },
+  { name: "Perkembangan Janin", icon: <BabyIcon size={20} />, href: "/janin" },
   { name: "Menu Harian", icon: <ForkKnife size={20} />, href: "/menumakanan" },
   { name: "Jurnal Kesehatan", icon: <Activity size={20} />, href: "/jurnal" },
   { name: "Artikel & Edukasi", icon: <Globe size={20} />, href: "/artikel" },
   { name: "Komunitas Ibu", icon: <Users size={20} />, href: "/komunitas" },
   { name: "Konsultasi", icon: <Stethoscope size={20} />, href: "/konsultasi" },
+  
   {
     name: "Pengaturan Akun",
     icon: <Settings size={20} />,
     href: "/pengaturan",
   },
+  
 ];
 
 // Data Dummy untuk Berita Terkini

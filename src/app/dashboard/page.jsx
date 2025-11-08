@@ -13,9 +13,13 @@ export default function Home() {
       <Sidebar />
       {/* Main Content */}
       <main className="flex-1 p-6 sm:p-8 md:ml-64">
-        <PageHeader />
+        <PageHeader 
+          title="Dashboard Utama"
+          description="Ringkasan kesehatan dan aktivitas harian Anda"
+          userName="Rani"
+        />
         {/* Cards Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 pt-4">
           {/* Card Status Nutrisi - Clickable */}
           <Link href="/jurnal" className="block">
             <div className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl">
@@ -45,13 +49,13 @@ export default function Home() {
           </Link>
 
           {/* Card Kalori - Clickable */}
-          <Link href="#" className="block">
+          <Link href="/scan" className="block">
             <div className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl">
               <CardStat
                 icon={<Apple className="w-6 h-6 text-green-500" />}
                 iconBg="bg-cyan-100"
                 title="Kalori Hari Ini"
-                value="1,850"
+                value="1,850 cal"
                 note="Target: 2,000 kal"
                 badge="Baik"
               />
@@ -59,7 +63,7 @@ export default function Home() {
           </Link>
           
           {/* Card Menu - Clickable */}
-          <Link href="/menumakananx   " className="block">
+          <Link href="/menumakanan   " className="block">
             <div className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl">
               <CardStat
                 icon={<Wheat className="w-6 h-6 text-yellow-500" />}

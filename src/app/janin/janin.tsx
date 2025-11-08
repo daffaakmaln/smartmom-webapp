@@ -89,7 +89,7 @@ export default function JaninPage() {
     <div className="max-w-7xl mx-auto">
       {/* Header with Back Button */}
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/perkembangan">
+        <Link href="/dashboard">
           <button className="p-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors">
             <ArrowLeft className="w-6 h-6 text-gray-700" />
           </button>
