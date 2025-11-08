@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Bell, Search, Clock, ArrowRight } from 'lucide-react';
+import PageHeader from '@/components/header_page';
 
 export default function ArtikelPage() {
   const [activeCategory, setActiveCategory] = useState('Semua');
@@ -91,27 +92,11 @@ export default function ArtikelPage() {
   return (
     <div className="min-h-screen bg-gray-50 pb-20 lg:pb-8">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 lg:px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl lg:text-2xl font-bold text-gray-800">Artikel Kehamilan & Nutrisi</h1>
-            <p className="text-xs lg:text-sm text-gray-500 mt-1">
-              Informasi terpercaya untuk perjalanan kehamilan yang lebih tenang
-            </p>
-          </div>
-          <div className="flex items-center gap-2 lg:gap-3">
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Bell size={20} className="text-gray-600" />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Search size={20} className="text-gray-600" />
-            </button>
-            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-xs lg:text-sm font-semibold">N</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHeader 
+        title="Artikel Kehamilan & Nutrisi"
+        description="Informasi terpercaya untuk perjalanan kehamilan yang lebih tenang"
+        userName="Rani"
+      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6 lg:py-8">

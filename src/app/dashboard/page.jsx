@@ -2,10 +2,10 @@
 
 import { Apple, Activity, Heart, Wheat} from "lucide-react";
 import Sidebar from "../dashboard/sidebar";
-import Header from "../dashboard/header";
 import CardStat from "../dashboard/card_stat";
 import TipsCard from "../dashboard/tips_card";
 import ActivityList from "../dashboard/activity_list";
+import PageHeader from "@/components/header_page";
 
 export default function Home() {
   return (
@@ -14,10 +14,14 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="flex-1 p-6 sm:p-8 md:ml-64">
-        <Header />
+        <PageHeader
+          title="Selamat Datang, Ibu Rani! "
+          description="Pantau kesehatan dan aktivitas harian Anda."
+          userName="Rani"
+        />
 
         {/* Cards Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 pt-4">
           <CardStat
             icon={<Activity className="w-6 h-6 text-pink-500" />}
             iconBg="bg-pink-100"
