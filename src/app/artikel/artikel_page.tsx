@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bell, Search, Clock, ArrowRight } from 'lucide-react';
 import PageHeader from '@/components/header_page';
+import Link from 'next/link';
 
 export default function ArtikelPage() {
   const [activeCategory, setActiveCategory] = useState('Semua');
@@ -146,10 +147,12 @@ export default function ArtikelPage() {
                       <Clock size={16} />
                       <span className="text-sm">{featuredArticle.readTime}</span>
                     </div>
+                    <Link href="/artikel_detail">
                     <button className="flex items-center gap-2 text-pink-500 font-semibold hover:gap-3 transition-all">
                       Baca Selengkapnya
                       <ArrowRight size={18} />
                     </button>
+                    </Link>
                   </div>
                 </div>
               </div>
