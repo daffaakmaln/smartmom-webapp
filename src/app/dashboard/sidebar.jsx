@@ -9,23 +9,23 @@ import {
   Settings,
   Activity,
   Menu,
-  ScanHeart,
+  Heart,
   Globe,
   X,
-  ForkKnife,
+  Utensils,
   Stethoscope,
-  LogOutIcon,
+  LogOut,
   AlertTriangle,
   Smile,
   Newspaper,
-  BabyIcon,
+  Baby,
 } from "lucide-react";
 
 const menu = [
   { name: "Beranda", icon: <Home size={20} />, href: "/dashboard" },
-  { name: "Scan AI Nutrisi", icon: <ScanHeart size={20} />, href: "/scan" },
-  { name: "Perkembangan Janin", icon: <BabyIcon size={20} />, href: "/janin" },
-  { name: "Menu Harian", icon: <ForkKnife size={20} />, href: "/menumakanan" },
+  { name: "Scan AI Nutrisi", icon: <Heart size={20} />, href: "/scan" },
+  { name: "Perkembangan Janin", icon: <Baby size={20} />, href: "/janin" },
+  { name: "Menu Harian", icon: <Utensils size={20} />, href: "/menumakanan" },
   { name: "Jurnal Kesehatan", icon: <Activity size={20} />, href: "/jurnal" },
   { name: "Artikel & Edukasi", icon: <Globe size={20} />, href: "/artikel" },
   { name: "Komunitas Ibu", icon: <Users size={20} />, href: "/komunitas" },
@@ -47,6 +47,7 @@ const currentNews = {
 };
 
 const WELCOME_POPUP_KEY = "hasSeenWelcomePopup";
+const SESSION_POPUP_KEY = "sessionWelcomeShown";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -57,12 +58,19 @@ export default function Sidebar() {
   const router = useRouter();
 
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      !localStorage.getItem(WELCOME_POPUP_KEY)
-    ) {
-      setShowWelcomePopup(true);
-      localStorage.setItem(WELCOME_POPUP_KEY, "true");
+    // Cek apakah user sudah login (bisa dicek dari pathname atau session)
+    // Dan belum melihat popup di session ini
+    if (typeof window !== "undefined") {
+      const hasSeenInSession = sessionStorage.getItem(SESSION_POPUP_KEY);
+      
+      // Tampilkan popup jika belum dilihat di session ini
+      if (!hasSeenInSession) {
+        // Delay sedikit untuk UX yang lebih baik
+        setTimeout(() => {
+          setShowWelcomePopup(true);
+          sessionStorage.setItem(SESSION_POPUP_KEY, "true");
+        }, 500);
+      }
     }
   }, []);
 
@@ -72,7 +80,9 @@ export default function Sidebar() {
 
   const handleConfirmLogout = () => {
     console.log("User logged out");
+    // Hapus session storage saat logout
     if (typeof window !== "undefined") {
+      sessionStorage.removeItem(SESSION_POPUP_KEY);
       localStorage.removeItem(WELCOME_POPUP_KEY);
     }
     router.push("/");
@@ -127,7 +137,7 @@ export default function Sidebar() {
           onClick={handleLogoutClick}
           className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all bg-white/10 hover:bg-white/20 border border-white/30 mt-4"
         >
-          <LogOutIcon size={20} />
+          <LogOut size={20} />
           <span className="text-sm font-medium">Keluar</span>
         </button>
       </div>
@@ -213,7 +223,7 @@ export default function Sidebar() {
                 }}
                 className="flex items-center gap-3 p-4 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-all w-full"
               >
-                <LogOutIcon size={20} />
+                <LogOut size={20} />
                 <span className="text-sm font-medium">Keluar</span>
               </button>
             </div>

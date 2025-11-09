@@ -1,9 +1,14 @@
 import React from "react";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+// import { i } from "framer-motion/client";
 
 const SmartMomHeroSection: React.FC = () => {
   return (
-    <section id="hero" className="bg-gradient-to-br from-gray-50 to-pink-50 py-8 px-4 md:py-12 md:px-6">
+    <section
+      id="hero"
+      className="bg-gradient-to-br from-gray-50 to-pink-50 py-8 px-4 md:py-12 md:px-6"
+    >
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-center">
           {/* Left Content */}
@@ -17,13 +22,14 @@ const SmartMomHeroSection: React.FC = () => {
               kami, setiap langkah menuju kelahiran buah hati terasa lebih
               ringan dan bermakna.
             </p>
-
+            <Link href="/auth">
             <div className="flex justify-center md:justify-start">
               <button className="group bg-pink-500 hover:bg-pink-600 text-white font-medium px-6 py-3 rounded-full flex items-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 text-sm md:text-base">
                 Mulai Sekarang
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
+            </Link>
           </div>
 
           {/* Right Content - Image Card */}
