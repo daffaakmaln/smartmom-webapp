@@ -172,7 +172,7 @@ export default function PaymentPage() {
                     <input
                       type="text"
                       placeholder="1234 5678 9012 3456"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -181,7 +181,7 @@ export default function PaymentPage() {
                       <input
                         type="text"
                         placeholder="MM/YY"
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
                       />
                     </div>
                     <div>
@@ -189,7 +189,7 @@ export default function PaymentPage() {
                       <input
                         type="text"
                         placeholder="123"
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
                       />
                     </div>
                   </div>
@@ -198,7 +198,7 @@ export default function PaymentPage() {
                     <input
                       type="text"
                       placeholder="NAMA ANDA"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
                     />
                   </div>
                 </div>
