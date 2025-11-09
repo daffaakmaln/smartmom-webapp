@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const navItems = ["Home", "Fitur", "Testimoni", "Contact Us"];
 
@@ -60,9 +61,11 @@ export default function Navbar({ onScrollToFeature, onScrollToTestimonial, onScr
       </div>
 
       {/* CTA Button */}
+      <Link href="/verifikasi">
       <button className="bg-pink-500 text-white px-5 py-2 rounded-full hover:bg-pink-600 transition">
         Daftar →
       </button>
+      </Link>
     </nav>
   );
 }

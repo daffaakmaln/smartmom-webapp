@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 const SmartMomHeroSection: React.FC = () => {
   return (
-    <section className="bg-gradient-to-br from-gray-50 to-pink-50 py-8 px-4 md:py-12 md:px-6">
+    <section id="hero" className="bg-gradient-to-br from-gray-50 to-pink-50 py-8 px-4 md:py-12 md:px-6">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-center">
           {/* Left Content */}

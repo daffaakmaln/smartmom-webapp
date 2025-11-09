@@ -1,23 +1,20 @@
 import { useState } from "react";
-import {
-  Check,
-  Crown,
-  Sparkles,
-  Heart,
-  Camera,
-  MessageCircle,
-  Baby,
+import { 
+  Check, 
+  Crown, 
+  Sparkles, 
+  Heart, 
+  Camera, 
+  MessageCircle, 
+  Baby, 
   TrendingUp,
   Shield,
   Zap,
-  Star,
-  ArrowLeft,
+  Star
 } from "lucide-react";
 
 export default function SubscriptionPage() {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
-    "monthly"
-  );
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
   const [hoveredPlan, setHoveredPlan] = useState<string | null>(null);
 
   const plans = [
@@ -32,39 +29,15 @@ export default function SubscriptionPage() {
       icon: <Heart size={32} />,
       popular: false,
       features: [
-        {
-          text: "1 scan makanan per hari",
-          icon: <Camera size={16} />,
-          available: true,
-        },
-        {
-          text: "Analisis nutrisi dasar",
-          icon: <TrendingUp size={16} />,
-          available: true,
-        },
-        {
-          text: "Artikel kesehatan umum",
-          icon: <Sparkles size={16} />,
-          available: true,
-        },
-        {
-          text: "Komunitas ibu",
-          icon: <MessageCircle size={16} />,
-          available: true,
-        },
-        {
-          text: "Konsultasi profesional",
-          icon: <Shield size={16} />,
-          available: false,
-        },
-        {
-          text: "Pantau perkembangan janin",
-          icon: <Baby size={16} />,
-          available: false,
-        },
+        { text: "5 scan makanan per hari", icon: <Camera size={16} />, available: true },
+        { text: "Analisis nutrisi dasar", icon: <TrendingUp size={16} />, available: true },
+        { text: "Artikel kesehatan umum", icon: <Sparkles size={16} />, available: true },
+        { text: "Komunitas ibu", icon: <MessageCircle size={16} />, available: true },
+        { text: "Konsultasi profesional", icon: <Shield size={16} />, available: false },
+        { text: "Pantau perkembangan janin", icon: <Baby size={16} />, available: false },
       ],
       cta: "Mulai Gratis",
-      ctaVariant: "outline",
+      ctaVariant: "outline"
     },
     {
       id: "plus",
@@ -77,44 +50,16 @@ export default function SubscriptionPage() {
       icon: <Sparkles size={32} />,
       popular: true,
       features: [
-        {
-          text: "Access lebih scan makanan/hari",
-          icon: <Camera size={16} />,
-          available: true,
-        },
-        {
-          text: "Analisis nutrisi lengkap & AI",
-          icon: <TrendingUp size={16} />,
-          available: true,
-        },
-        {
-          text: "Rekomendasi menu personal",
-          icon: <Star size={16} />,
-          available: true,
-        },
-        {
-          text: "Artikel & panduan premium",
-          icon: <Sparkles size={16} />,
-          available: true,
-        },
-        {
-          text: "Tracking kesehatan harian",
-          icon: <Heart size={16} />,
-          available: true,
-        },
-        {
-          text: "Konsultasi chat (5x/bulan)",
-          icon: <MessageCircle size={16} />,
-          available: true,
-        },
-        {
-          text: "Pantau perkembangan janin",
-          icon: <Baby size={16} />,
-          available: false,
-        },
+        { text: "50 scan makanan per hari", icon: <Camera size={16} />, available: true },
+        { text: "Analisis nutrisi lengkap & AI", icon: <TrendingUp size={16} />, available: true },
+        { text: "Rekomendasi menu personal", icon: <Star size={16} />, available: true },
+        { text: "Artikel & panduan premium", icon: <Sparkles size={16} />, available: true },
+        { text: "Tracking kesehatan harian", icon: <Heart size={16} />, available: true },
+        { text: "Konsultasi chat (5x/bulan)", icon: <MessageCircle size={16} />, available: true },
+        { text: "Pantau perkembangan janin", icon: <Baby size={16} />, available: false },
       ],
       cta: "Pilih Plus",
-      ctaVariant: "solid",
+      ctaVariant: "solid"
     },
     {
       id: "pro",
@@ -127,44 +72,21 @@ export default function SubscriptionPage() {
       icon: <Crown size={32} />,
       popular: false,
       features: [
-        {
-          text: "Unlimited scan makanan",
-          icon: <Camera size={16} />,
-          available: true,
-        },
-        {
-          text: "AI analisis super detail",
-          icon: <Zap size={16} />,
-          available: true,
-        },
-        {
-          text: "Menu personal dari ahli gizi",
-          icon: <Star size={16} />,
-          available: true,
-        },
-        {
-          text: "Semua artikel & konten eksklusif",
-          icon: <Sparkles size={16} />,
-          available: true,
-        },
-        {
-          text: "Konsultasi unlimited (chat & video)",
-          icon: <MessageCircle size={16} />,
-          available: true,
-        },
-        {
-          text: "Pantau janin dengan teknologi AI",
-          icon: <Baby size={16} />,
-          available: true,
-        },
+        { text: "Unlimited scan makanan", icon: <Camera size={16} />, available: true },
+        { text: "AI analisis super detail", icon: <Zap size={16} />, available: true },
+        { text: "Menu personal dari ahli gizi", icon: <Star size={16} />, available: true },
+        { text: "Semua artikel & konten eksklusif", icon: <Sparkles size={16} />, available: true },
+        { text: "Konsultasi unlimited (chat & video)", icon: <MessageCircle size={16} />, available: true },
+        { text: "Pantau janin dengan teknologi AI", icon: <Baby size={16} />, available: true },
+        { text: "Prioritas customer support 24/7", icon: <Shield size={16} />, available: true },
       ],
       cta: "Pilih Pro",
-      ctaVariant: "solid",
-    },
+      ctaVariant: "solid"
+    }
   ];
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("id-ID").format(price);
+    return new Intl.NumberFormat('id-ID').format(price);
   };
 
   return (
@@ -176,29 +98,11 @@ export default function SubscriptionPage() {
         <div className="absolute -bottom-20 left-1/2 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative z-10 px-4 py-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
-          <div className="flex items-center justify-center mb-6 relative px-4">
-            {/* Tombol Back */}
-            <button
-              onClick={() => window.history.back()}
-              className="absolute left-4 sm:left-6 md:left-8 flex items-center justify-center w-15 h-15 rounded-full bg-white shadow-md hover:bg-gray-100 transition-all"
-              aria-label="Kembali"
-            >
-              <ArrowLeft size={25} className="text-gray-700" />
-            </button>
-
-            {/* Logo */}
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-pink-400 to-pink-600 rounded-3xl shadow-lg transform hover:scale-105 transition-transform">
-              <div className="w-15 h-15 rounded-full bg-white flex items-center justify-center">
-                <img
-                  src="/logo.png"
-                  className="w-14 h-14 rounded-full"
-                  alt="logo"
-                />
-              </div>
-            </div>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl mb-6 shadow-lg">
+            <Crown className="text-white w-8 h-8" />
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
             Pilih Paket Terbaik Anda
@@ -238,18 +142,17 @@ export default function SubscriptionPage() {
         {/* Pricing Cards */}
         <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
-            const displayPrice =
-              billingCycle === "monthly" ? plan.price : plan.yearlyPrice;
+            const displayPrice = billingCycle === "monthly" ? plan.price : plan.yearlyPrice;
             const isHovered = hoveredPlan === plan.id;
-
+            
             return (
               <div
                 key={plan.id}
                 onMouseEnter={() => setHoveredPlan(plan.id)}
                 onMouseLeave={() => setHoveredPlan(null)}
                 className={`relative bg-white rounded-3xl p-8 transition-all duration-500 animate-slide-up ${
-                  plan.popular
-                    ? "shadow-2xl scale-105 border-2 border-pink-300"
+                  plan.popular 
+                    ? "shadow-2xl scale-105 border-2 border-pink-300" 
                     : "shadow-lg hover:shadow-xl hover:scale-105"
                 }`}
                 style={{ animationDelay: `${index * 0.1}s` }}
@@ -265,29 +168,21 @@ export default function SubscriptionPage() {
                 )}
 
                 {/* Icon */}
-                <div
-                  className={`w-16 h-16 bg-gradient-to-br ${
-                    plan.gradient
-                  } rounded-2xl flex items-center justify-center text-white mb-6 transition-transform duration-300 ${
-                    isHovered ? "scale-110 rotate-6" : ""
-                  }`}
-                >
+                <div className={`w-16 h-16 bg-gradient-to-br ${plan.gradient} rounded-2xl flex items-center justify-center text-white mb-6 transition-transform duration-300 ${
+                  isHovered ? "scale-110 rotate-6" : ""
+                }`}>
                   {plan.icon}
                 </div>
 
                 {/* Plan Name */}
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                  {plan.name}
-                </h3>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">{plan.name}</h3>
                 <p className="text-gray-500 text-sm mb-6">{plan.description}</p>
 
                 {/* Price */}
                 <div className="mb-6">
                   {plan.price === 0 ? (
                     <div className="flex items-baseline">
-                      <span className="text-5xl font-bold text-gray-800">
-                        Gratis
-                      </span>
+                      <span className="text-5xl font-bold text-gray-800">Gratis</span>
                     </div>
                   ) : (
                     <>
@@ -302,8 +197,7 @@ export default function SubscriptionPage() {
                       </p>
                       {billingCycle === "yearly" && plan.price > 0 && (
                         <p className="text-green-600 text-xs font-semibold mt-1">
-                          Hemat Rp{" "}
-                          {formatPrice(plan.price * 12 - plan.yearlyPrice)}
+                          Hemat Rp {formatPrice((plan.price * 12) - plan.yearlyPrice)}
                         </p>
                       )}
                     </>
@@ -320,14 +214,8 @@ export default function SubscriptionPage() {
                       }`}
                     >
                       {feature.available ? (
-                        <div
-                          className={`w-5 h-5 bg-gradient-to-br ${plan.gradient} rounded-full flex items-center justify-center flex-shrink-0 mt-0.5`}
-                        >
-                          <Check
-                            size={12}
-                            className="text-white"
-                            strokeWidth={3}
-                          />
+                        <div className={`w-5 h-5 bg-gradient-to-br ${plan.gradient} rounded-full flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                          <Check size={12} className="text-white" strokeWidth={3} />
                         </div>
                       ) : (
                         <div className="w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -335,22 +223,10 @@ export default function SubscriptionPage() {
                         </div>
                       )}
                       <div className="flex items-center gap-2">
-                        <span
-                          className={
-                            feature.available
-                              ? "text-gray-600"
-                              : "text-gray-400"
-                          }
-                        >
+                        <span className={feature.available ? "text-gray-600" : "text-gray-400"}>
                           {feature.icon}
                         </span>
-                        <span
-                          className={`text-sm ${
-                            feature.available
-                              ? "text-gray-700"
-                              : "text-gray-400 line-through"
-                          }`}
-                        >
+                        <span className={`text-sm ${feature.available ? "text-gray-700" : "text-gray-400 line-through"}`}>
                           {feature.text}
                         </span>
                       </div>
@@ -360,6 +236,20 @@ export default function SubscriptionPage() {
 
                 {/* CTA Button */}
                 <button
+                  onClick={() => {
+                    if (plan.id === "free") {
+                      alert("Anda sudah menggunakan paket gratis!");
+                    } else {
+                      // Redirect ke halaman payment dengan query params
+                      const params = new URLSearchParams({
+                        plan: plan.id,
+                        name: plan.name,
+                        price: displayPrice.toString(),
+                        billing: billingCycle
+                      });
+                      window.location.href = `/pembayaran?${params.toString()}`;
+                    }
+                  }}
                   className={`w-full py-4 rounded-xl font-bold transition-all duration-300 ${
                     plan.ctaVariant === "solid"
                       ? `bg-gradient-to-r ${plan.gradient} text-white hover:shadow-lg hover:scale-105`

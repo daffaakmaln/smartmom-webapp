@@ -2,8 +2,7 @@
 import Link from "next/link";
 import HeroImageCarousel from "./carousel_hero";
 import { useRef } from "react";
-import FeatureSection from "./feature_section";
-import { on } from "events";
+
 
 interface HeroProps {
   onScrollToFeature: () => void;
@@ -12,9 +11,6 @@ interface HeroProps {
 export default function Hero({ onScrollToFeature }: HeroProps) {
   const featureRef = useRef<HTMLDivElement | null>(null);
 
-  const handleScroll = () => {
-    featureRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
   return (
     <section className="flex flex-col-reverse md:flex-row justify-between items-center px-6 md:px-20 py-12">
       {/* Left Side */}

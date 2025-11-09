@@ -1,17 +1,30 @@
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ArrowRight, ArrowLeft, Heart, Sparkles, User, Calendar, Mail, Lock, Activity, Moon, Scale, AlertCircle } from "lucide-react";
+
+import {
+  ArrowRight,
+  ArrowLeft,
+  Heart,
+  User,
+  Calendar,
+  Mail,
+  Lock,
+  Moon,
+  Scale,
+} from "lucide-react";
+
 
 export default function OnboardingPage() {
   const [currentSession, setCurrentSession] = useState(1);
   const [progress, setProgress] = useState(0);
-  
+
   // Session 1 Data
   const [session1Data, setSession1Data] = useState({
     purpose: "",
     nickname: "",
     birthYear: "",
     email: "",
-    password: ""
+    password: "",
   });
 
   // Session 2 Data (Dynamic based on purpose)
@@ -29,7 +42,7 @@ export default function OnboardingPage() {
     // For Postpartum
     childBirthDate: "",
     childGender: "",
-    feedingMethod: ""
+    feedingMethod: "",
   });
 
   // Session 3 Data
@@ -38,38 +51,50 @@ export default function OnboardingPage() {
     weight: "",
     stressLevel: "",
     sleepHours: "",
-    chronicConditions: ""
+    chronicConditions: "",
   });
 
   const [showCompletion, setShowCompletion] = useState(false);
 
   const updateSession1 = (field: string, value: string) => {
-    setSession1Data(prev => ({ ...prev, [field]: value }));
+    setSession1Data((prev) => ({ ...prev, [field]: value }));
   };
 
   const updateSession2 = (field: string, value: string) => {
-    setSession2Data(prev => ({ ...prev, [field]: value }));
+    setSession2Data((prev) => ({ ...prev, [field]: value }));
   };
 
   const updateSession3 = (field: string, value: string) => {
-    setSession3Data(prev => ({ ...prev, [field]: value }));
+    setSession3Data((prev) => ({ ...prev, [field]: value }));
   };
 
   const nextSession = () => {
-    if (currentSession === 1) {
-      setProgress(33);
-      setCurrentSession(2);
-    } else if (currentSession === 2) {
-      setProgress(66);
-      setCurrentSession(3);
-    } else if (currentSession === 3) {
-      setProgress(100);
-      setShowCompletion(true);
-      setTimeout(() => {
-        alert("Selamat datang di SmartMom! Profile Anda telah lengkap.");
-      }, 2000);
-    }
-  };
+  if (currentSession === 1) {
+    setProgress(33);
+    setCurrentSession(2);
+  } else if (currentSession === 2) {
+    setProgress(66);
+    setCurrentSession(3);
+  } else if (currentSession === 3) {
+    setProgress(100);
+    setShowCompletion(true);
+
+    // Redirect safely after 2 seconds
+    setTimeout(() => {
+      if (typeof window !== "undefined") {
+        try {
+          // Use Next.js router if available
+          const { push } = require("next/router");
+          push("/dashboard");
+        } catch {
+          // Fallback for environments without router
+          window.location.href = "/dashboard";
+        }
+      }
+    }, 2000);
+  }
+};
+
 
   const prevSession = () => {
     if (currentSession === 2) {
@@ -101,8 +126,16 @@ export default function OnboardingPage() {
         <div className="space-y-3">
           {[
             // { value: "cycle", label: "Melacak Siklus Menstruasi & Kesehatan Umum", icon: "🩸" },
-            { value: "ttc", label: "Merencanakan Kehamilan (Trying To Conceive)", icon: "💑" },
-            { value: "pregnant", label: "Melacak Kehamilan & Perkembangan Janin", icon: "🤰" },
+            {
+              value: "ttc",
+              label: "Merencanakan Kehamilan (Trying To Conceive)",
+              icon: "💑",
+            },
+            {
+              value: "pregnant",
+              label: "Melacak Kehamilan & Perkembangan Janin",
+              icon: "🤰",
+            },
             // { value: "postpartum", label: "Pascapersalinan & Kesehatan Anak", icon: "👶" }
           ].map((option) => (
             <button
@@ -133,7 +166,7 @@ export default function OnboardingPage() {
             value={session1Data.nickname}
             onChange={(e) => updateSession1("nickname", e.target.value)}
             placeholder="Contoh: Ibu Rani"
-            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
           />
         </div>
       </div>
@@ -152,7 +185,7 @@ export default function OnboardingPage() {
             placeholder="Contoh: 1990"
             min="1950"
             max="2010"
-            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
           />
         </div>
       </div>
@@ -169,7 +202,7 @@ export default function OnboardingPage() {
             value={session1Data.email}
             onChange={(e) => updateSession1("email", e.target.value)}
             placeholder="Email Anda"
-            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
           />
         </div>
         <div className="relative">
@@ -179,7 +212,7 @@ export default function OnboardingPage() {
             value={session1Data.password}
             onChange={(e) => updateSession1("password", e.target.value)}
             placeholder="Password"
-            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
           />
         </div>
       </div>
@@ -195,7 +228,9 @@ export default function OnboardingPage() {
         <div className="space-y-6 animate-fade-in">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">
-              {purpose === "ttc" ? "Perjalanan Promil Anda 💑" : "Kesehatan Reproduksi 🩸"}
+              {purpose === "ttc"
+                ? "Perjalanan Promil Anda 💑"
+                : "Kesehatan Reproduksi 🩸"}
             </h2>
             <p className="text-gray-600">
               Data ini membantu kami memberikan prediksi yang akurat
@@ -211,7 +246,7 @@ export default function OnboardingPage() {
               type="date"
               value={session2Data.lastPeriod}
               onChange={(e) => updateSession2("lastPeriod", e.target.value)}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
             />
           </div>
 
@@ -221,11 +256,17 @@ export default function OnboardingPage() {
               2. Berapa rata-rata lama siklus menstruasi Anda?
             </label>
             <div className="grid grid-cols-2 gap-3">
-              {["21 hari", "28 hari", "30 hari", "35 hari", "Tidak Teratur"].map((option) => (
+              {[
+                "21 hari",
+                "28 hari",
+                "30 hari",
+                "35 hari",
+                "Tidak Teratur",
+              ].map((option) => (
                 <button
                   key={option}
                   onClick={() => updateSession2("cycleLength", option)}
-                  className={`p-3 rounded-xl border-2 transition-all ${
+                  className={`p-3 rounded-xl border-2 transition-all text-gray-700 ${
                     session2Data.cycleLength === option
                       ? "border-pink-500 bg-pink-50"
                       : "border-gray-200 hover:border-pink-300"
@@ -243,11 +284,18 @@ export default function OnboardingPage() {
               3. Metode kontrasepsi yang sedang digunakan? (Opsional)
             </label>
             <div className="grid grid-cols-2 gap-3">
-              {["Tidak Ada", "Pil KB", "IUD/Spiral", "Kondom", "KB Suntik", "Implan"].map((option) => (
+              {[
+                "Tidak Ada",
+                "Pil KB",
+                "IUD/Spiral",
+                "Kondom",
+                "KB Suntik",
+                "Implan",
+              ].map((option) => (
                 <button
                   key={option}
                   onClick={() => updateSession2("contraception", option)}
-                  className={`p-3 rounded-xl border-2 transition-all ${
+                  className={`p-3 rounded-xl border-2 transition-all text-gray-700 ${
                     session2Data.contraception === option
                       ? "border-pink-500 bg-pink-50"
                       : "border-gray-200 hover:border-pink-300"
@@ -270,7 +318,7 @@ export default function OnboardingPage() {
                   <button
                     key={option}
                     onClick={() => updateSession2("supplements", option)}
-                    className={`p-3 rounded-xl border-2 transition-all ${
+                    className={`p-3 rounded-xl border-2 transition-all text-gray-700 ${
                       session2Data.supplements === option
                         ? "border-pink-500 bg-pink-50"
                         : "border-gray-200 hover:border-pink-300"
@@ -307,7 +355,7 @@ export default function OnboardingPage() {
               type="date"
               value={session2Data.dueDate}
               onChange={(e) => updateSession2("dueDate", e.target.value)}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
             />
           </div>
 
@@ -323,7 +371,7 @@ export default function OnboardingPage() {
               placeholder="Contoh: 12"
               min="1"
               max="42"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
             />
           </div>
 
@@ -337,7 +385,7 @@ export default function OnboardingPage() {
                 <button
                   key={option}
                   onClick={() => updateSession2("firstPregnancy", option)}
-                  className={`p-3 rounded-xl border-2 transition-all ${
+                  className={`p-3 rounded-xl border-2 transition-all text-gray-700 ${
                     session2Data.firstPregnancy === option
                       ? "border-pink-500 bg-pink-50"
                       : "border-gray-200 hover:border-pink-300"
@@ -355,11 +403,16 @@ export default function OnboardingPage() {
               4. Adakah kondisi medis kehamilan? (Opsional)
             </label>
             <div className="grid grid-cols-2 gap-3">
-              {["Tidak Ada", "Gestational Diabetes", "Preeklampsia", "Lainnya"].map((option) => (
+              {[
+                "Tidak Ada",
+                "Gestational Diabetes",
+                "Preeklampsia",
+                "Lainnya",
+              ].map((option) => (
                 <button
                   key={option}
                   onClick={() => updateSession2("medicalConditions", option)}
-                  className={`p-3 rounded-xl border-2 transition-all ${
+                  className={`p-3 rounded-xl border-2 transition-all text-gray-700 ${
                     session2Data.medicalConditions === option
                       ? "border-pink-500 bg-pink-50"
                       : "border-gray-200 hover:border-pink-300"
@@ -381,9 +434,7 @@ export default function OnboardingPage() {
             <h2 className="text-3xl font-bold text-gray-800 mb-2">
               Kesehatan Ibu & Anak 👶
             </h2>
-            <p className="text-gray-600">
-              Ceritakan tentang si kecil
-            </p>
+            <p className="text-gray-600">Ceritakan tentang si kecil</p>
           </div>
 
           {/* Child Birth Date */}
@@ -407,7 +458,7 @@ export default function OnboardingPage() {
             <div className="grid grid-cols-2 gap-3">
               {[
                 { value: "boy", label: "Laki-laki 👦" },
-                { value: "girl", label: "Perempuan 👧" }
+                { value: "girl", label: "Perempuan 👧" },
               ].map((option) => (
                 <button
                   key={option.value}
@@ -430,19 +481,21 @@ export default function OnboardingPage() {
               3. Metode pemberian makan anak?
             </label>
             <div className="grid grid-cols-2 gap-3">
-              {["ASI Eksklusif", "Susu Formula", "Kombinasi ASI & Formula"].map((option) => (
-                <button
-                  key={option}
-                  onClick={() => updateSession2("feedingMethod", option)}
-                  className={`p-3 rounded-xl border-2 transition-all ${
-                    session2Data.feedingMethod === option
-                      ? "border-pink-500 bg-pink-50"
-                      : "border-gray-200 hover:border-pink-300"
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
+              {["ASI Eksklusif", "Susu Formula", "Kombinasi ASI & Formula"].map(
+                (option) => (
+                  <button
+                    key={option}
+                    onClick={() => updateSession2("feedingMethod", option)}
+                    className={`p-3 rounded-xl border-2 transition-all ${
+                      session2Data.feedingMethod === option
+                        ? "border-pink-500 bg-pink-50"
+                        : "border-gray-200 hover:border-pink-300"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                )
+              )}
             </div>
           </div>
         </div>
@@ -471,13 +524,13 @@ export default function OnboardingPage() {
             1. Tinggi Badan (cm)
           </label>
           <div className="relative">
-            <Scale className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Scale className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 " />
             <input
               type="number"
               value={session3Data.height}
               onChange={(e) => updateSession3("height", e.target.value)}
               placeholder="160"
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
             />
           </div>
         </div>
@@ -492,7 +545,7 @@ export default function OnboardingPage() {
               value={session3Data.weight}
               onChange={(e) => updateSession3("weight", e.target.value)}
               placeholder="55"
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
             />
           </div>
         </div>
@@ -508,7 +561,7 @@ export default function OnboardingPage() {
             <button
               key={level}
               onClick={() => updateSession3("stressLevel", level)}
-              className={`p-3 rounded-xl border-2 transition-all ${
+              className={`p-3 rounded-xl border-2 transition-all text-gray-700 ${
                 session3Data.stressLevel === level
                   ? "border-pink-500 bg-pink-50"
                   : "border-gray-200 hover:border-pink-300"
@@ -518,7 +571,9 @@ export default function OnboardingPage() {
             </button>
           ))}
         </div>
-        <p className="text-xs text-gray-500 text-center">1 = Sangat Tenang | 5 = Sangat Stres</p>
+        <p className="text-xs text-gray-500 text-center">
+          1 = Sangat Tenang | 5 = Sangat Stres
+        </p>
       </div>
 
       {/* Sleep Hours */}
@@ -535,7 +590,7 @@ export default function OnboardingPage() {
             placeholder="7"
             min="1"
             max="24"
-            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-700"
           />
         </div>
         <p className="text-xs text-gray-500">Dalam jam per hari</p>
@@ -547,11 +602,18 @@ export default function OnboardingPage() {
           4. Riwayat kondisi kesehatan kronis? (Opsional)
         </label>
         <div className="grid grid-cols-2 gap-3">
-          {["Tidak Ada", "PCOS", "Endometriosis", "Diabetes", "Hipertensi", "Lainnya"].map((option) => (
+          {[
+            "Tidak Ada",
+            "PCOS",
+            "Endometriosis",
+            "Diabetes",
+            "Hipertensi",
+            "Lainnya",
+          ].map((option) => (
             <button
               key={option}
               onClick={() => updateSession3("chronicConditions", option)}
-              className={`p-3 rounded-xl border-2 transition-all ${
+              className={`p-3 rounded-xl border-2 transition-all text-gray-700 ${
                 session3Data.chronicConditions === option
                   ? "border-pink-500 bg-pink-50"
                   : "border-gray-200 hover:border-pink-300"
@@ -577,7 +639,8 @@ export default function OnboardingPage() {
             Selamat Datang, {session1Data.nickname || "Ibu"}! 🎉
           </h1>
           <p className="text-gray-600 mb-6 max-w-md mx-auto">
-            Profile Anda telah lengkap! Kami siap membantu Anda dalam perjalanan kesehatan dan keluarga.
+            Profile Anda telah lengkap! Kami siap membantu Anda dalam perjalanan
+            kesehatan dan keluarga.
           </p>
           <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-6 max-w-md mx-auto shadow-xl">
             <div className="text-left space-y-2 text-sm">
@@ -592,13 +655,16 @@ export default function OnboardingPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Email:</span>
-                <span className="font-semibold text-gray-800">{session1Data.email}</span>
+                <span className="font-semibold text-gray-800">
+                  {session1Data.email}
+                </span>
               </div>
             </div>
           </div>
           <p className="text-gray-500 mt-6 text-sm">
             Mengarahkan ke dashboard...
           </p>
+
         </div>
       </div>
     );
@@ -617,12 +683,35 @@ export default function OnboardingPage() {
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-2xl">
           {/* Logo */}
-           <div className="text-center mb-6">
-      <div className="inline-flex items-center justify-center w-16 h-16  rounded-2xl mb-3 shadow-lg">
-        <img src="/logo.png" className="w-14 h-14 rounded-xl object-cover" alt="SmartMom Logo" />
-      </div>
-      <h1 className="text-2xl font-bold text-gray-800">SmartMom</h1>
-    </div>
+            <div className="flex items-center justify-center mb-6 relative px-4">
+            {/* Tombol Back */}
+            <button
+              onClick={() => window.history.back()}
+              className="absolute left-4 sm:left-6 md:left-8 flex items-center justify-center w-15 h-15 rounded-full bg-white shadow-md hover:bg-gray-100 transition-all"
+              aria-label="Kembali"
+            >
+              <ArrowLeft size={25} className="text-gray-700" />
+            </button>
+
+            {/* Logo + Title */}
+            <div className="flex flex-col items-center">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-pink-400 to-pink-600 rounded-3xl shadow-lg transform hover:scale-105 transition-transform">
+              <div className="w-15 h-15 rounded-full bg-white flex items-center justify-center">
+                <img src="/logo.png" className="w-14 h-14 rounded-full" alt="logo" />
+              </div>
+              </div>
+
+              {/* Title Below Logo */}
+              <div className="mt-3 text-center">
+                <h1 className="text-2xl font-bold text-gray-800">
+                  Verifikasi & Registrasi Profile
+                </h1>
+                <p className="text-gray-600 text-sm">
+                  Agar kami dapat memberikan pengalaman terbaik untuk Anda
+                </p>
+              </div>
+            </div>
+            </div>
 
           {/* Progress Bar */}
           <div className="mb-8">
@@ -669,7 +758,8 @@ export default function OnboardingPage() {
 
       <style jsx>{`
         @keyframes blob {
-          0%, 100% {
+          0%,
+          100% {
             transform: translate(0px, 0px) scale(1);
           }
           33% {
