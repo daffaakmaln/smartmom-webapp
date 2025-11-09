@@ -30,63 +30,51 @@ const menu = [
   { name: "Artikel & Edukasi", icon: <Globe size={20} />, href: "/artikel" },
   { name: "Komunitas Ibu", icon: <Users size={20} />, href: "/komunitas" },
   { name: "Konsultasi", icon: <Stethoscope size={20} />, href: "/konsultasi" },
-  
   {
     name: "Pengaturan Akun",
     icon: <Settings size={20} />,
     href: "/pengaturan",
   },
-  
 ];
 
 // Data Dummy untuk Berita Terkini
 const currentNews = {
   title: "Tips Nutrisi Terbaik untuk Trimester Kedua!",
   image:
-    "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80", // Ganti dengan URL gambar berita Anda
+    "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80",
   description:
     "Selamat datang kembali! Jangan lewatkan artikel terbaru kami mengenai **pentingnya asam folat dan zat besi** untuk perkembangan optimal janin di usia kandungan 4 hingga 6 bulan. Baca selengkapnya di menu **Artikel & Edukasi**.",
 };
 
-// Kunci unik untuk localStorage
 const WELCOME_POPUP_KEY = "hasSeenWelcomePopup";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
-  // Inisialisasi state pop-up menjadi FALSE
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
 
   const pathname = usePathname();
   const router = useRouter();
 
-  // Efek untuk MENAMPILKAN Pop-up Selamat Datang (hanya sekali)
   useEffect(() => {
-    // Periksa apakah pop-up sudah pernah dilihat
     if (
       typeof window !== "undefined" &&
       !localStorage.getItem(WELCOME_POPUP_KEY)
     ) {
       setShowWelcomePopup(true);
-      // Tandai bahwa pop-up sudah dilihat
       localStorage.setItem(WELCOME_POPUP_KEY, "true");
     }
-  }, []); // [] memastikan hanya dijalankan sekali setelah mount
+  }, []);
 
   const handleLogoutClick = () => {
     setShowLogoutPopup(true);
   };
 
   const handleConfirmLogout = () => {
-    // Logika logout (hapus token, clear storage, dll)
     console.log("User logged out");
-
-    // Hapus status pop-up dari localStorage agar muncul lagi di sesi login berikutnya
     if (typeof window !== "undefined") {
       localStorage.removeItem(WELCOME_POPUP_KEY);
     }
-
-    // Redirect ke halaman /src (global/landing page)
     router.push("/");
     setShowLogoutPopup(false);
   };
@@ -108,7 +96,6 @@ export default function Sidebar() {
       overlay.classList.add("animate-fade-out");
     }
 
-    // Tunggu durasi animasi (350ms), lalu sembunyikan popup
     setTimeout(() => {
       setShowWelcomePopup(false);
     }, 350);
@@ -116,8 +103,6 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* ... (Kode Sidebar Desktop, Mobile Nav, dan Drawer tidak berubah) ... */}
-
       {/* Sidebar Desktop */}
       <div className="hidden lg:flex fixed w-64 bg-gradient-to-b from-pink-500 to-pink-600 text-white p-6 flex-col rounded-r-3xl h-screen shadow-xl z-50">
         <h1 className="text-2xl font-bold mb-10">SmartMom</h1>
@@ -138,7 +123,6 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        {/* Logout Button */}
         <button
           onClick={handleLogoutClick}
           className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all bg-white/10 hover:bg-white/20 border border-white/30 mt-4"
@@ -178,13 +162,13 @@ export default function Sidebar() {
       {/* Drawer Menu (for mobile) */}
       {open && (
         <>
-          {/* Overlay */}
+          {/* Overlay dengan animasi fade-in */}
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 lg:hidden"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 lg:hidden animate-fade-in"
             onClick={() => setOpen(false)}
           />
 
-          {/* Drawer */}
+          {/* Drawer dengan animasi slide-up */}
           <div
             className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 shadow-2xl z-[60] lg:hidden animate-slide-up"
             onClick={(e) => e.stopPropagation()}
@@ -222,7 +206,6 @@ export default function Sidebar() {
                 </Link>
               ))}
 
-              {/* Logout Button di Drawer */}
               <button
                 onClick={() => {
                   setOpen(false);
@@ -238,28 +221,21 @@ export default function Sidebar() {
         </>
       )}
 
-      {/* =======================================
-        POP-UP SELAMAT DATANG (WELCOME POPUP)
-        (Hanya muncul sekali setelah login)
-        =======================================
-      */}
+      {/* Welcome Popup */}
       {showWelcomePopup && (
         <>
-          {/* Overlay */}
           <div
             className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-[75] flex items-center justify-center p-4 transition-opacity duration-500 ease-out ${
               showWelcomePopup ? "animate-fade-in" : "animate-fade-out"
             }`}
             onClick={handleCloseWelcomePopup}
           >
-            {/* Popup Modal */}
             <div
               className={`bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden transform transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 showWelcomePopup ? "animate-popup-enter" : "animate-popup-exit"
               }`}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Gambar Berita Terkini */}
               <div className="h-48 w-full bg-pink-100 relative overflow-hidden">
                 <img
                   src={currentNews.image}
@@ -273,19 +249,16 @@ export default function Sidebar() {
               </div>
 
               <div className="p-8">
-                {/* Judul Selamat Datang */}
                 <div className="flex items-center gap-3 mb-4 text-pink-500">
                   <Smile size={30} className="text-pink-600" />
                   <h3 className="text-3xl font-extrabold text-gray-800">
                     Selamat Datang!
                   </h3>
                 </div>
-
                 <h4 className="text-xl font-bold text-gray-800 mb-2">
                   {currentNews.title}
                 </h4>
                 <p className="text-gray-600 mb-6">{currentNews.description}</p>
-
                 <div className="flex gap-3">
                   <button
                     onClick={handleCloseWelcomePopup}
@@ -304,97 +277,31 @@ export default function Sidebar() {
               </div>
             </div>
           </div>
-
-          {/* CSS Animation */}
-          <style jsx>{`
-            @keyframes fade-in {
-              from {
-                opacity: 0;
-              }
-              to {
-                opacity: 1;
-              }
-            }
-
-            @keyframes fade-out {
-              from {
-                opacity: 1;
-              }
-              to {
-                opacity: 0;
-              }
-            }
-
-            @keyframes popup-enter {
-              from {
-                opacity: 0;
-                transform: translateY(25px) scale(0.95);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-              }
-            }
-
-            @keyframes popup-exit {
-              from {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-              }
-              to {
-                opacity: 0;
-                transform: translateY(25px) scale(0.95);
-              }
-            }
-
-            .animate-fade-in {
-              animation: fade-in 0.35s ease-out forwards;
-            }
-
-            .animate-fade-out {
-              animation: fade-out 0.35s ease-in forwards;
-            }
-
-            .animate-popup-enter {
-              animation: popup-enter 0.45s ease-out forwards;
-            }
-
-            .animate-popup-exit {
-              animation: popup-exit 0.35s ease-in forwards;
-            }
-          `}</style>
         </>
       )}
 
-      {/* Logout Confirmation Popup (Tidak diubah) */}
+      {/* Logout Popup */}
       {showLogoutPopup && (
         <>
-          {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] flex items-center justify-center p-4 animate-fade-in"
             onClick={handleCancelLogout}
           >
-            {/* Popup Modal */}
             <div
               className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-scale-in"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Icon Warning */}
               <div className="flex justify-center mb-6">
                 <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
                   <AlertTriangle size={32} className="text-red-500" />
                 </div>
               </div>
-
-              {/* Title & Message */}
               <h3 className="text-2xl font-bold text-gray-800 text-center mb-3">
                 Keluar dari Akun?
               </h3>
               <p className="text-gray-600 text-center mb-8">
                 Apakah Anda yakin ingin keluar dari akun SmartMom Anda?
               </p>
-
-              {/* Buttons */}
               <div className="flex gap-3">
                 <button
                   onClick={handleCancelLogout}
@@ -411,26 +318,65 @@ export default function Sidebar() {
               </div>
             </div>
           </div>
-
-          {/* CSS Animation (Sudah ada di kode Anda) */}
-          <style jsx>{`
-            @keyframes scale-in {
-              from {
-                opacity: 0;
-                transform: scale(0.9);
-              }
-              to {
-                opacity: 1;
-                transform: scale(1);
-              }
-            }
-
-            .animate-scale-in {
-              animation: scale-in 0.2s ease-out;
-            }
-          `}</style>
         </>
       )}
+
+      {/* GLOBAL STYLES FOR ANIMATIONS */}
+      <style jsx global>{`
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes fade-out {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+
+        @keyframes slide-up {
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
+        }
+
+        @keyframes scale-in {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes popup-enter {
+          from { opacity: 0; transform: translateY(25px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes popup-exit {
+          from { opacity: 1; transform: translateY(0) scale(1); }
+          to { opacity: 0; transform: translateY(25px) scale(0.95); }
+        }
+
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out forwards;
+        }
+
+        .animate-fade-out {
+          animation: fade-out 0.3s ease-in forwards;
+        }
+
+        .animate-slide-up {
+          animation: slide-up 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+        }
+
+        .animate-scale-in {
+          animation: scale-in 0.2s ease-out forwards;
+        }
+
+        .animate-popup-enter {
+          animation: popup-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .animate-popup-exit {
+          animation: popup-exit 0.35s ease-in forwards;
+        }
+      `}</style>
     </>
   );
 }
