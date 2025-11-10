@@ -8,7 +8,7 @@ export default function Whysection() {
       {/* Left Image */}
       <div className="relative">
         <img
-          src="/why1.jpg"
+          src="/why1.png"
           alt="SmartMom"
           className="rounded-3xl shadow-lg w-[220px] md:w-[320px] object-cover"
         />
