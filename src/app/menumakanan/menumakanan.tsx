@@ -12,6 +12,7 @@ import {
   Check
 } from "lucide-react";
 import PageHeader from "@/components/header_page";
+import Link from "next/link";
 
 export default function MenuMakanan() {
   const [savedMenus, setSavedMenus] = useState<number[]>([]);
@@ -127,6 +128,7 @@ export default function MenuMakanan() {
         </div>
 
         {/* Menu List */}
+        <Link href="/menu_detail">
         <div className="space-y-6">
           {menuData.map((menu) => (
             <div key={menu.id} className="bg-white rounded-3xl p-6 shadow-sm">
@@ -207,6 +209,7 @@ export default function MenuMakanan() {
             </div>
           ))}
         </div>
+        </Link>
 
         {/* Bottom Info */}
         <div className="mt-6 bg-gradient-to-r from-pink-500 to-pink-600 rounded-2xl p-6 text-white">

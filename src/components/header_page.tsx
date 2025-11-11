@@ -15,7 +15,7 @@ export default function PageHeader({
   title,
   description,
   userName = "R",
-  showSubscription = true,
+  showSubscription = false,
   isPremium = false,
 }: PageHeaderProps) {
   return (
