@@ -4,6 +4,7 @@ import React, { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, PerspectiveCamera } from '@react-three/drei';
 import { Calendar, Baby, Scale, RotateCw, Info, ArrowLeft, Download, Share2 } from 'lucide-react';
+import PageHeader from '@/components/header_page';
 
 // Component untuk load model GLB
 function FetalModel({ modelPath }: { modelPath: string }) {
@@ -51,17 +52,11 @@ export default function JaninPage() {
   return (
     <div className="max-w-7xl mx-auto p-4">
       {/* Header with Back Button */}
-      <div className="flex items-center gap-4 mb-6">
-        <button className="p-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors">
-          <ArrowLeft className="w-6 h-6 text-gray-700" />
-        </button>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-purple-900">
-            Visualisasi Janin 3D
-          </h1>
-          <p className="text-gray-600">Minggu ke-{pregnancyData.weeks} Kehamilan</p>
-        </div>
-      </div>
+      <PageHeader
+        title="Visualisasi Janin 3D"
+        description={`Minggu ke-${pregnancyData.weeks} Kehamilan`}
+        userName="SmartMom"
+      />
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

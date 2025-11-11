@@ -14,7 +14,7 @@ interface PageHeaderProps {
 export default function PageHeader({
   title,
   description,
-  userName = "R",
+  userName = "S",
   showSubscription = false,
   isPremium = false,
 }: PageHeaderProps) {
