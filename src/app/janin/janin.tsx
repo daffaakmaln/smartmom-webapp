@@ -1,14 +1,29 @@
-// app/perkembangan/janin/page.tsx
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
+import React, { useState, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF, Environment, PerspectiveCamera } from '@react-three/drei';
 import { Calendar, Baby, Scale, RotateCw, Info, ArrowLeft, Download, Share2 } from 'lucide-react';
-import Link from 'next/link';
+
+// Component untuk load model GLB
+function FetalModel({ modelPath }: { modelPath: string }) {
+  const gltf = useGLTF(modelPath);
+  return <primitive object={gltf.scene} scale={2.5} position={[0, -1, 0]} />;
+}
+
+// Loading placeholder
+function LoadingPlaceholder() {
+  return (
+    <mesh>
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial color="#ffc9d4" opacity={0.5} transparent />
+    </mesh>
+  );
+}
 
 export default function JaninPage() {
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [modelPath] = useState('/model/fetus.glb'); // Path ke file GLB Anda
+  const controlsRef = useRef<any>(null);
 
   const pregnancyData = {
     weeks: 28,
@@ -24,76 +39,22 @@ export default function JaninPage() {
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartPos({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return;
-    const deltaX = e.clientX - startPos.x;
-    const deltaY = e.clientY - startPos.y;
-    setRotation({
-      x: rotation.x + deltaY * 0.5,
-      y: rotation.y + deltaX * 0.5
-    });
-    setStartPos({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsDragging(true);
-    setStartPos({ 
-      x: e.touches[0].clientX, 
-      y: e.touches[0].clientY 
-    });
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    const deltaX = e.touches[0].clientX - startPos.x;
-    const deltaY = e.touches[0].clientY - startPos.y;
-    setRotation({
-      x: rotation.x + deltaY * 0.5,
-      y: rotation.y + deltaX * 0.5
-    });
-    setStartPos({ 
-      x: e.touches[0].clientX, 
-      y: e.touches[0].clientY 
-    });
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
-
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-      };
+  const resetCamera = () => {
+    if (controlsRef.current) {
+      // Try calling reset on OrbitControls if available, then re-center target and update.
+      controlsRef.current.reset?.();
+      if (controlsRef.current.target?.set) controlsRef.current.target.set(0, 0, 0);
+      controlsRef.current.update?.();
     }
-  }, [isDragging]);
-
-  const resetRotation = () => {
-    setRotation({ x: 0, y: 0 });
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto p-4">
       {/* Header with Back Button */}
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/dashboard">
-          <button className="p-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors">
-            <ArrowLeft className="w-6 h-6 text-gray-700" />
-          </button>
-        </Link>
+        <button className="p-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors">
+          <ArrowLeft className="w-6 h-6 text-gray-700" />
+        </button>
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-purple-900">
             Visualisasi Janin 3D
@@ -146,7 +107,7 @@ export default function JaninPage() {
             <h2 className="text-xl font-bold text-gray-800">Model 3D Interaktif</h2>
             <div className="flex items-center gap-3">
               <button 
-                onClick={resetRotation}
+                onClick={resetCamera}
                 className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors text-sm font-medium"
               >
                 <RotateCw className="w-4 h-4" />
@@ -154,75 +115,52 @@ export default function JaninPage() {
               </button>
               <div className="hidden md:flex items-center gap-2 text-sm text-gray-500">
                 <RotateCw className="w-4 h-4" />
-                <span>Geser untuk memutar</span>
+                <span>Drag untuk memutar</span>
               </div>
             </div>
           </div>
           
           <div 
-            ref={containerRef}
-            className="relative bg-gradient-to-b from-pink-100 to-purple-100 rounded-xl overflow-hidden cursor-grab active:cursor-grabbing select-none"
+            className="relative bg-gradient-to-b from-pink-100 to-purple-100 rounded-xl overflow-hidden"
             style={{ height: '500px' }}
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
           >
-            {/* 3D Fetus Model */}
-            <div 
-              className="absolute inset-0 flex items-center justify-center transition-transform duration-100"
-              style={{
-                transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
-              }}
-            >
-              <svg width="300" height="400" viewBox="0 0 300 400" className="drop-shadow-2xl">
-                {/* Body */}
-                <ellipse cx="150" cy="200" rx="80" ry="120" fill="#ffc9d4" opacity="0.9"/>
-                
-                {/* Head */}
-                <circle cx="150" cy="100" r="70" fill="#ffd4dc" opacity="0.95"/>
-                
-                {/* Eyes (closed) */}
-                <ellipse cx="130" cy="90" rx="15" ry="8" fill="#ffb3c1" opacity="0.7"/>
-                <ellipse cx="170" cy="90" rx="15" ry="8" fill="#ffb3c1" opacity="0.7"/>
-                
-                {/* Nose */}
-                <ellipse cx="150" cy="105" rx="8" ry="12" fill="#ffb3c1" opacity="0.5"/>
-                
-                {/* Arms */}
-                <ellipse cx="100" cy="220" rx="15" ry="60" fill="#ffc9d4" opacity="0.85" 
-                  transform="rotate(-30 100 220)"/>
-                <ellipse cx="200" cy="220" rx="15" ry="60" fill="#ffc9d4" opacity="0.85" 
-                  transform="rotate(30 200 220)"/>
-                
-                {/* Legs */}
-                <ellipse cx="130" cy="300" rx="18" ry="70" fill="#ffc9d4" opacity="0.85"/>
-                <ellipse cx="170" cy="300" rx="18" ry="70" fill="#ffc9d4" opacity="0.85"/>
-                
-                {/* Umbilical cord */}
-                <path d="M 150 250 Q 120 280 100 320" stroke="#e89fb5" strokeWidth="4" 
-                  fill="none" opacity="0.6"/>
-              </svg>
-            </div>
-
-            {/* Floating particles */}
-            <div className="absolute inset-0 pointer-events-none">
-              {[...Array(20)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-2 h-2 bg-white rounded-full opacity-30 animate-pulse"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * 2}s`
-                  }}
+            <Canvas shadows camera={{ position: [0, 0, 5], fov: 50 }}>
+              <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+              
+              {/* Lighting */}
+              <ambientLight intensity={0.6} />
+              <directionalLight 
+                position={[5, 5, 5]} 
+                intensity={0.8} 
+                castShadow 
+                shadow-mapSize-width={1024}
+                shadow-mapSize-height={1024}
+              />
+              <spotLight position={[-5, 5, 2]} intensity={0.3} />
+              
+              {/* Environment for reflections */}
+              <Environment preset="sunset" />
+              
+              {/* 3D Model */}
+              <Suspense fallback={<LoadingPlaceholder />}>
+                <FetalModel modelPath={modelPath} />
+                <OrbitControls 
+                  ref={controlsRef}
+                  enablePan={true}
+                  enableZoom={true}
+                  enableRotate={true}
+                  minDistance={2}
+                  maxDistance={10}
+                  autoRotate={false}
+                  autoRotateSpeed={0.5}
                 />
-              ))}
-            </div>
+              </Suspense>
+            </Canvas>
 
-            {/* Rotation indicator */}
+            {/* Instructions overlay */}
             <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-700">
-              <p>Rotasi: X: {Math.round(rotation.x)}° Y: {Math.round(rotation.y)}°</p>
+              <p>🖱️ Klik & drag untuk memutar</p>
+              <p>🔍 Scroll untuk zoom</p>
             </div>
           </div>
 
