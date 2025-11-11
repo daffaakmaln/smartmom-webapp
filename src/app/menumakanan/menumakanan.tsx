@@ -8,8 +8,6 @@ import {
   Fish, 
   RefreshCw, 
   Bookmark,
-  Bell,
-  Search,
   Star,
   Check
 } from "lucide-react";
@@ -71,8 +69,8 @@ export default function MenuMakanan() {
     <div className="min-h-screen bg-gray-50 pb-20 lg:pb-8">
       {/* Header */}
       <PageHeader 
-        title="Menu Harian Sehat"
-        description="Rencana makan harian yang dirancang khusus untuk ibu hamil"
+        title="Rekomendasi menu"
+        description="Menu disesuaikan dengan usia kehamilan dan kebutuhan nutrisi ibu."
         userName="Rani"
       />
 
