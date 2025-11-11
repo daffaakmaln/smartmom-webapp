@@ -22,21 +22,6 @@ export default function MenuMakanan() {
   const menuData = [
     {
       id: 1,
-      category: "Sarapan Pagi",
-      icon: "🥣",
-      name: "Bubur Havermut dengan Buah Segar",
-      description: "Oatmeal hangat dengan potongan pisang, stroberi, dan taburan chia seed",
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
-      calories: [320, 320, 320, 320],
-      benefits: [
-        "Sumber energi tahan lama",
-        "Kaya serat untuk pencernaan",
-        "Vitamin B kompleks",
-        "Vitamin B kompleks"
-      ]
-    },
-    {
-      id: 2,
       category: "Makan Siang",
       icon: "⭐",
       name: "Nasi Merah dengan Ikan & Sayur",
@@ -51,7 +36,7 @@ export default function MenuMakanan() {
       ]
     },
     {
-      id: 3,
+      id: 2,
       category: "Makan Malam",
       icon: "🍽️",
       name: "Sup Ayam dengan Quinoa",
