@@ -60,7 +60,7 @@ export default function Jurnal() {
       <PageHeader
         title="Jurnal Kesehatan"
         description="Catat dan pantau kesehatan harian Anda."
-        userName="Rani"
+        userName="SmartMom"
       />
 
       {/* Main Content */}

@@ -14,8 +14,8 @@ export default function PengaturanPage() {
   });
   
   const [profileData, setProfileData] = useState({
-    name: 'Ibu Rani',
-    email: 'iburani@email.com',
+    name: 'FutureMom',
+    email: 'user@gmail.com',
     phone: '081234567890',
     birthDate: '1990-05-15',
     address: 'Jl. Kenangan No. 123, Jakarta Selatan',
@@ -81,7 +81,7 @@ export default function PengaturanPage() {
       <PageHeader
         title="Pengaturan Akun"
         description="Kelola informasi pribadi dan preferensi akun Anda"
-        userName="Rani"
+        userName="SmartMom"
       />
 
       {/* Main Content */}
@@ -134,7 +134,7 @@ export default function PengaturanPage() {
                   <div className="flex items-center gap-6">
                     <div className="relative">
                       <div className="w-24 h-24 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-3xl font-bold">IR</span>
+                        <span className="text-white text-3xl font-bold">S</span>
                       </div>
                       <button className="absolute bottom-0 right-0 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors shadow-md">
                         <Camera size={16} />
@@ -272,7 +272,7 @@ export default function PengaturanPage() {
                         value={passwordData.currentPassword}
                         onChange={handlePasswordChange}
                         placeholder="Masukkan password lama"
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-800"
                       />
                     </div>
 
@@ -286,7 +286,7 @@ export default function PengaturanPage() {
                         value={passwordData.newPassword}
                         onChange={handlePasswordChange}
                         placeholder="Masukkan password baru"
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-800"
                       />
                     </div>
 
@@ -300,7 +300,7 @@ export default function PengaturanPage() {
                         value={passwordData.confirmPassword}
                         onChange={handlePasswordChange}
                         placeholder="Konfirmasi password baru"
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-800"
                       />
                     </div>
 
@@ -314,7 +314,7 @@ export default function PengaturanPage() {
                   </div>
                 </div>
 
-                {/* Two-Factor Authentication */}
+                Two-Factor Authentication
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -444,7 +444,7 @@ export default function PengaturanPage() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Bahasa
                       </label>
-                      <select className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all">
+                      <select className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-800">
                         <option>Bahasa Indonesia</option>
                         <option>English</option>
                       </select>
@@ -454,7 +454,7 @@ export default function PengaturanPage() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Zona Waktu
                       </label>
-                      <select className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all">
+                      <select className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all text-gray-800">
                         <option>WIB (GMT+7)</option>
                         <option>WITA (GMT+8)</option>
                         <option>WIT (GMT+9)</option>
@@ -463,7 +463,7 @@ export default function PengaturanPage() {
                   </div>
                 </div>
 
-                {/* Theme */}
+                {/* Theme
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <h2 className="text-lg font-bold text-gray-800 mb-4">Tampilan</h2>
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
@@ -484,7 +484,7 @@ export default function PengaturanPage() {
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
                     </label>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Privacy */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">

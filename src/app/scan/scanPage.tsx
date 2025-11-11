@@ -171,7 +171,7 @@ export default function ScanPage() {
       <PageHeader
         title="Scan AI Nutrisi"
         description="Upload foto makanan dan dapatkan analisis nutrisi secara instan dengan AI"
-        userName="Rani"
+        userName="SmartMom"
       />
 
       <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8">

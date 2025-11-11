@@ -96,7 +96,7 @@ export default function ArtikelPage() {
       <PageHeader 
         title="Artikel Kehamilan & Nutrisi"
         description="Informasi terpercaya untuk perjalanan kehamilan yang lebih tenang"
-        userName="Rani"
+        userName="SmartMom"
       />
 
       {/* Main Content */}

@@ -14,9 +14,9 @@ export default function Home() {
       {/* Main Content */}
       <main className="flex-1 p-6 sm:p-8 md:ml-64">
         <PageHeader 
-          title="Selamat Datang, Ibu Rani!"
+          title="Selamat Datang, FutureMom!"
           description="Ringkasan kesehatan dan aktivitas harian Anda"
-          userName="Rani"
+          userName="SmartMom"
         />
         {/* Cards Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 pt-4">

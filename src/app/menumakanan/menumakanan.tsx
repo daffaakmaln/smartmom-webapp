@@ -71,7 +71,7 @@ export default function MenuMakanan() {
       <PageHeader 
         title="Rekomendasi menu"
         description="Menu disesuaikan dengan usia kehamilan dan kebutuhan nutrisi ibu."
-        userName="Rani"
+        userName="SmartMom"
       />
 
       {/* Nutrition Summary Cards */}

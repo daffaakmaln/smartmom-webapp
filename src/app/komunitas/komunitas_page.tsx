@@ -68,8 +68,8 @@ export default function KomunitasPage() {
       const newPost = {
         id: Date.now(),
         user: {
-          name: 'Ibu Rani',
-          avatar: 'https://i.pravatar.cc/150?img=47',
+          name: 'FutureMom',
+          avatar: '/s.png',
           time: 'Baru saja'
         },
         content: postText,
@@ -88,7 +88,7 @@ export default function KomunitasPage() {
       <PageHeader
         title="S-Moms Komunitas"
         description="Bergabunglah dengan komunitas ibu hamil untuk berbagi cerita, tips, dan dukungan."
-        userName="Rani"
+        userName="SmartMom"
       />
 
       {/* Main Content */}
@@ -100,12 +100,12 @@ export default function KomunitasPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
               <div className="flex gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-sm font-semibold">R</span>
+                  <span className="text-white text-sm font-semibold">S</span>
                 </div>
                 <div className="flex-1">
                   <div className="mb-3">
-                    <p className="font-semibold text-black">Ibu Rani</p>
-                    <p className="text-xs text-gray-500"></p>
+                    <p className="font-semibold text-black">FutureMom</p>
+                    <p className="text-xs text-gray-500">Postingan Terbaru</p>
                   </div>
                   <textarea
                     value={postText}
