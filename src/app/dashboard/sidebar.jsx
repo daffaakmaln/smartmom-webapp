@@ -42,8 +42,7 @@ const currentNews = {
   title: "Tips Nutrisi Terbaik untuk Trimester Kedua!",
   image:
     "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80",
-  description:
-    "Selamat datang kembali! Jangan lewatkan artikel terbaru kami mengenai **pentingnya asam folat dan zat besi** untuk perkembangan optimal janin di usia kandungan 4 hingga 6 bulan. Baca selengkapnya di menu **Artikel & Edukasi**.",
+  description: `Selamat datang kembali! Jangan lewatkan artikel terbaru kami mengenai <b>pentingnya asam folat dan zat besi</b> untuk perkembangan optimal janin di usia kandungan 4 hingga 6 bulan. Baca selengkapnya di menu <b>Artikel & Edukasi</b>.`,
 };
 
 const WELCOME_POPUP_KEY = "hasSeenWelcomePopup";
@@ -58,14 +57,10 @@ export default function Sidebar() {
   const router = useRouter();
 
   useEffect(() => {
-    // Cek apakah user sudah login (bisa dicek dari pathname atau session)
-    // Dan belum melihat popup di session ini
     if (typeof window !== "undefined") {
       const hasSeenInSession = sessionStorage.getItem(SESSION_POPUP_KEY);
-      
-      // Tampilkan popup jika belum dilihat di session ini
+
       if (!hasSeenInSession) {
-        // Delay sedikit untuk UX yang lebih baik
         setTimeout(() => {
           setShowWelcomePopup(true);
           sessionStorage.setItem(SESSION_POPUP_KEY, "true");
@@ -80,7 +75,6 @@ export default function Sidebar() {
 
   const handleConfirmLogout = () => {
     console.log("User logged out");
-    // Hapus session storage saat logout
     if (typeof window !== "undefined") {
       sessionStorage.removeItem(SESSION_POPUP_KEY);
       localStorage.removeItem(WELCOME_POPUP_KEY);
@@ -169,68 +163,6 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* Drawer Menu (for mobile) */}
-      {open && (
-        <>
-          {/* Overlay dengan animasi fade-in */}
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 lg:hidden animate-fade-in"
-            onClick={() => setOpen(false)}
-          />
-
-          {/* Drawer dengan animasi slide-up */}
-          <div
-            className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 shadow-2xl z-[60] lg:hidden animate-slide-up"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold text-gray-800">Menu Lainnya</h2>
-              <button
-                onClick={() => setOpen(false)}
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              >
-                <X size={20} className="text-gray-500" />
-              </button>
-            </div>
-
-            <div className="space-y-2 max-h-[60vh] overflow-y-auto">
-              {menu.slice(4).map((item, idx) => (
-                <Link
-                  key={idx}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className={`flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all ${
-                    pathname === item.href
-                      ? "bg-pink-500 text-white shadow-md"
-                      : "bg-pink-50 text-gray-800 hover:bg-pink-100"
-                  }`}
-                >
-                  <span
-                    className={
-                      pathname === item.href ? "text-white" : "text-pink-500"
-                    }
-                  >
-                    {item.icon}
-                  </span>
-                  <p className="text-sm font-medium">{item.name}</p>
-                </Link>
-              ))}
-
-              <button
-                onClick={() => {
-                  setOpen(false);
-                  handleLogoutClick();
-                }}
-                className="flex items-center gap-3 p-4 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-all w-full"
-              >
-                <LogOut size={20} />
-                <span className="text-sm font-medium">Keluar</span>
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-
       {/* Welcome Popup */}
       {showWelcomePopup && (
         <>
@@ -268,7 +200,13 @@ export default function Sidebar() {
                 <h4 className="text-xl font-bold text-gray-800 mb-2">
                   {currentNews.title}
                 </h4>
-                <p className="text-gray-600 mb-6">{currentNews.description}</p>
+
+                {/* ✅ Perubahan di sini */}
+                <p
+                  className="text-gray-600 mb-6"
+                  dangerouslySetInnerHTML={{ __html: currentNews.description }}
+                ></p>
+
                 <div className="flex gap-3">
                   <button
                     onClick={handleCloseWelcomePopup}
@@ -331,60 +269,58 @@ export default function Sidebar() {
         </>
       )}
 
-      {/* GLOBAL STYLES FOR ANIMATIONS */}
+      {/* GLOBAL STYLES */}
       <style jsx global>{`
         @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
 
         @keyframes fade-out {
-          from { opacity: 1; }
-          to { opacity: 0; }
+          from {
+            opacity: 1;
+          }
+          to {
+            opacity: 0;
+          }
         }
 
         @keyframes slide-up {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
-        }
-
-        @keyframes scale-in {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
+          from {
+            transform: translateY(100%);
+          }
+          to {
+            transform: translateY(0);
+          }
         }
 
         @keyframes popup-enter {
-          from { opacity: 0; transform: translateY(25px) scale(0.95); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes popup-exit {
-          from { opacity: 1; transform: translateY(0) scale(1); }
-          to { opacity: 0; transform: translateY(25px) scale(0.95); }
+          from {
+            opacity: 0;
+            transform: translateY(25px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
         }
 
         .animate-fade-in {
           animation: fade-in 0.3s ease-out forwards;
         }
 
-        .animate-fade-out {
-          animation: fade-out 0.3s ease-in forwards;
-        }
-
-        .animate-slide-up {
-          animation: slide-up 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-        }
-
-        .animate-scale-in {
-          animation: scale-in 0.2s ease-out forwards;
-        }
-
         .animate-popup-enter {
           animation: popup-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        .animate-popup-exit {
-          animation: popup-exit 0.35s ease-in forwards;
+        /* ✨ tambahan style buat <b> biar warna pink */
+        p b {
+          color: #ec4899;
+          font-weight: 700;
         }
       `}</style>
     </>
