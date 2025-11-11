@@ -105,6 +105,10 @@ export default function Sidebar() {
     }, 350);
   };
 
+  const handleCloseMobileMenu = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       {/* Sidebar Desktop */}
@@ -163,6 +167,58 @@ export default function Sidebar() {
         </button>
       </div>
 
+      {/* Mobile Menu Overlay - Lainnya */}
+      {open && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden animate-fade-in"
+            onClick={handleCloseMobileMenu}
+          />
+          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-[65] lg:hidden animate-slide-up max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-gray-800">Menu Lainnya</h2>
+                <button
+                  onClick={handleCloseMobileMenu}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-all"
+                >
+                  <X size={24} className="text-gray-600" />
+                </button>
+              </div>
+
+              <nav className="space-y-2">
+                {menu.slice(4).map((item, idx) => (
+                  <Link
+                    key={idx}
+                    href={item.href}
+                    onClick={handleCloseMobileMenu}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${
+                      pathname === item.href
+                        ? "bg-pink-500 text-white shadow-md"
+                        : "bg-gray-50 text-gray-700 hover:bg-pink-50"
+                    }`}
+                  >
+                    {item.icon}
+                    <span className="text-sm font-medium">{item.name}</span>
+                  </Link>
+                ))}
+
+                <button
+                  onClick={() => {
+                    handleCloseMobileMenu();
+                    handleLogoutClick();
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all bg-red-50 text-red-600 hover:bg-red-100 mt-4"
+                >
+                  <LogOut size={20} />
+                  <span className="text-sm font-medium">Keluar</span>
+                </button>
+              </nav>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Welcome Popup */}
       {showWelcomePopup && (
         <>
@@ -201,7 +257,6 @@ export default function Sidebar() {
                   {currentNews.title}
                 </h4>
 
-                {/* ✅ Perubahan di sini */}
                 <p
                   className="text-gray-600 mb-6"
                   dangerouslySetInnerHTML={{ __html: currentNews.description }}
@@ -292,9 +347,11 @@ export default function Sidebar() {
         @keyframes slide-up {
           from {
             transform: translateY(100%);
+            opacity: 0;
           }
           to {
             transform: translateY(0);
+            opacity: 1;
           }
         }
 
@@ -309,15 +366,42 @@ export default function Sidebar() {
           }
         }
 
+        @keyframes scale-in {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
         .animate-fade-in {
           animation: fade-in 0.3s ease-out forwards;
+        }
+
+        .animate-fade-out {
+          animation: fade-out 0.3s ease-out forwards;
+        }
+
+        .animate-slide-up {
+          animation: slide-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
         .animate-popup-enter {
           animation: popup-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        /* ✨ tambahan style buat <b> biar warna pink */
+        .animate-popup-exit {
+          animation: fade-out 0.35s ease-out forwards;
+        }
+
+        .animate-scale-in {
+          animation: scale-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        /* Style untuk text bold berwarna pink */
         p b {
           color: #ec4899;
           font-weight: 700;
