@@ -59,7 +59,7 @@ export default function JaninPage() {
       />
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 pt-4">
         <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-purple-500">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-purple-100 rounded-lg">
