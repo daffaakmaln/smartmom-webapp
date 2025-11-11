@@ -53,7 +53,7 @@ const MacroInput: React.FC<{
         <label className="block text-xs font-semibold text-gray-500 mb-2">{label}</label>
         <div className="flex items-center gap-2">
             <div className={`w-8 h-8 ${colorClass} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                <Icon size={16} className="text-white" />
+                {/* <Icon size="16" className="text-white" /> */}
             </div>
             <input
                 type="number"
