@@ -31,6 +31,15 @@ export default function ContactSection() {
       <div className="max-w-6xl mx-auto px-4 lg:px-6">
         {/* Section Header */}
         <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-pink-400 to-pink-600 rounded-3xl mb-4 shadow-lg transform hover:scale-105 transition-transform">
+              <div className="w-15 h-15 rounded-full bg-white flex items-center justify-center">
+                <img
+                  src="/logo.png"
+                  className="w-14 h-14 rounded-full"
+                  alt="logo"
+                />
+              </div>
+            </div>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-3">
             Hubungi Kami
           </h2>
@@ -56,22 +65,6 @@ export default function ContactSection() {
               <p className="text-sm text-gray-600">{contact.value}</p>
             </a>
           ))}
-        </div>
-
-        {/* Bottom CTA */}
-        <div className="mt-12 text-center">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-2xl mx-auto">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Siap Memulai Perjalanan Kehamilan Anda?
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Bergabunglah dengan ribuan ibu hamil lainnya dan dapatkan dukungan yang Anda butuhkan.
-            </p>
-            <button className="bg-pink-500 text-white px-8 py-3 rounded-full hover:bg-pink-600 transition-all font-semibold inline-flex items-center gap-2 shadow-md">
-              <Send size={18} />
-              Daftar Sekarang
-            </button>
-          </div>
         </div>
       </div>
     </section>

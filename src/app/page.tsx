@@ -6,6 +6,7 @@ import Whysection from "../components/whysection";
 import FeatureSection from "../components/feature_section";
 import SmartMomTestimonials from "../components/smartmom_testimonials";
 import SmartMomHeroSection from "../components/smartmom_hero_section";
+import ContactSection from "../components/contact";
 import Footer from "../components/footer";
 import { useRef } from "react";
 
@@ -13,6 +14,7 @@ export default function Home() {
   const featureRef = useRef<HTMLDivElement | null>(null);
   const testimonialRef = useRef<HTMLDivElement | null>(null);
   const heroRef = useRef<HTMLDivElement | null>(null);
+  const contactRef = useRef<HTMLDivElement | null>(null);
 
   const scrollWithOffset = (element: HTMLElement | null) => {
     if (element) {
@@ -26,12 +28,14 @@ export default function Home() {
   const handleScrollToHero = () => scrollWithOffset(heroRef.current);
   const handleScrollToFeature = () => scrollWithOffset(featureRef.current);
   const handleScrollToTestimonial = () => scrollWithOffset(testimonialRef.current);
+  const handleScrollToContact = () => scrollWithOffset(contactRef.current);
   return (
     <main className="bg-white text-gray-900 min-h-screen">
       <Navbar
         onScrollToTestimonial={handleScrollToTestimonial}
         onScrollToFeature={handleScrollToFeature}
         onScrollToHero={handleScrollToHero}
+        onScrollToContact={handleScrollToContact}
       />
       <div ref={heroRef}>
         <Hero onScrollToFeature={handleScrollToFeature} />
@@ -42,6 +46,10 @@ export default function Home() {
       </div>
       <div ref={testimonialRef}>
         <SmartMomTestimonials />
+      </div>
+
+      <div ref={contactRef}>
+        <ContactSection />
       </div>
       <SmartMomHeroSection />
       <Footer />

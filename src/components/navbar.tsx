@@ -7,12 +7,15 @@ import Link from "next/link";
 const navItems = ["Home", "Fitur", "Testimoni", "Contact Us"];
 
 interface NavbarProps {
+
   onScrollToFeature: () => void;
   onScrollToTestimonial: () => void;
   onScrollToHero: () => void;
+  onScrollToContact: () => void;
+  
 }
 
-export default function Navbar({ onScrollToFeature, onScrollToTestimonial, onScrollToHero }: NavbarProps) {
+export default function Navbar({ onScrollToFeature, onScrollToTestimonial, onScrollToHero, onScrollToContact }: NavbarProps) {
   const [active, setActive] = useState("Home");
 
   const handleClick = (item: string) => {
@@ -27,6 +30,8 @@ export default function Navbar({ onScrollToFeature, onScrollToTestimonial, onScr
     }
   } else if (item === "Home") {
     onScrollToHero();
+  } else if (item === "Contact Us") {
+    onScrollToContact();
   }
 };
 
