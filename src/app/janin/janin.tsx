@@ -1,9 +1,9 @@
 "use client";
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import React, { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, PerspectiveCamera } from '@react-three/drei';
-import { Calendar, Baby, Scale, RotateCw, Info, ArrowLeft, Download, Share2 } from 'lucide-react';
+import { Calendar, Baby, Scale, RotateCw, Info, ArrowLeft, Download, Share2, Check, Copy } from 'lucide-react';
 import PageHeader from '@/components/header_page';
 
 // Component untuk load model GLB
@@ -23,8 +23,13 @@ function LoadingPlaceholder() {
 }
 
 export default function JaninPage() {
-  const [modelPath] = useState('/model/fetus.glb'); // Path ke file GLB Anda
+  const [modelPath] = useState('/model/fetus.glb');
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
+  
   const controlsRef = useRef<any>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const pregnancyData = {
     weeks: 28,
@@ -42,12 +47,84 @@ export default function JaninPage() {
 
   const resetCamera = () => {
     if (controlsRef.current) {
-      // Try calling reset on OrbitControls if available, then re-center target and update.
       controlsRef.current.reset?.();
       if (controlsRef.current.target?.set) controlsRef.current.target.set(0, 0, 0);
       controlsRef.current.update?.();
     }
   };
+
+  // Fungsi untuk download gambar 3D
+  const downloadImage = useCallback(async () => {
+    setIsDownloading(true);
+    
+    try {
+      // Mendapatkan canvas dari Three.js
+      const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+      if (!canvas) {
+        throw new Error('Canvas tidak ditemukan');
+      }
+
+      // Membuat image data dari canvas
+      const imageDataUrl = canvas.toDataURL('image/png', 1.0);
+      
+      // Membuat element anchor untuk download
+      const link = document.createElement('a');
+      link.download = `janin-3d-minggu-${pregnancyData.weeks}.png`;
+      link.href = imageDataUrl;
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      alert('Gagal mengunduh gambar. Silakan coba lagi.');
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [pregnancyData.weeks]);
+
+  // Fungsi untuk berbagi
+  const shareContent = useCallback(async () => {
+    setIsSharing(true);
+    
+    const shareData = {
+      title: `Visualisasi Janin 3D - Minggu ke-${pregnancyData.weeks}`,
+      text: `Lihat perkembangan janin saya di minggu ke-${pregnancyData.weeks}! 
+Berat: ${pregnancyData.fetalWeight} | Panjang: ${pregnancyData.fetalLength} 
+Perkiraan lahir: ${pregnancyData.dueDate} 🤱`,
+      url: window.location.href,
+    };
+
+    try {
+      // Cek apakah Web Share API tersedia
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: copy to clipboard
+        const textToCopy = `${shareData.title}\n\n${shareData.text}\n\n${shareData.url}`;
+        await navigator.clipboard.writeText(textToCopy);
+        
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 3000);
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      
+      // Fallback manual copy
+      try {
+        const textToCopy = `${shareData.title}\n\n${shareData.text}\n\n${shareData.url}`;
+        await navigator.clipboard.writeText(textToCopy);
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 3000);
+      } catch (clipboardError) {
+        alert('Gagal berbagi. Silakan salin link secara manual.');
+      }
+    } finally {
+      setIsSharing(false);
+    }
+  }, [pregnancyData]);
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -119,7 +196,15 @@ export default function JaninPage() {
             className="relative bg-gradient-to-b from-pink-100 to-purple-100 rounded-xl overflow-hidden"
             style={{ height: '500px' }}
           >
-            <Canvas shadows camera={{ position: [0, 0, 5], fov: 50 }}>
+            <Canvas 
+              ref={canvasRef}
+              shadows 
+              camera={{ position: [0, 0, 5], fov: 50 }}
+              gl={{ 
+                preserveDrawingBuffer: true, // Penting untuk screenshot
+                antialias: true 
+              }}
+            >
               <PerspectiveCamera makeDefault position={[0, 0, 5]} />
               
               {/* Lighting */}
@@ -172,13 +257,31 @@ export default function JaninPage() {
 
           {/* Action Buttons */}
           <div className="mt-4 flex flex-col sm:flex-row gap-3">
-            <button className="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium">
-              <Download className="w-5 h-5" />
-              Simpan Gambar
+            <button 
+              onClick={downloadImage}
+              disabled={isDownloading}
+              className="flex-1 flex items-center justify-center gap-2 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Download className={`w-5 h-5 ${isDownloading ? 'animate-bounce' : ''}`} />
+              {isDownloading ? 'Mengunduh...' : 'Simpan Gambar'}
             </button>
-            <button className="flex-1 flex items-center justify-center gap-2 bg-pink-600 text-white py-3 rounded-lg hover:bg-pink-700 transition-colors font-medium">
-              <Share2 className="w-5 h-5" />
-              Bagikan
+            
+            <button 
+              onClick={shareContent}
+              disabled={isSharing}
+              className="flex-1 flex items-center justify-center gap-2 bg-pink-600 text-white py-3 rounded-lg hover:bg-pink-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {shareSuccess ? (
+                <>
+                  <Check className="w-5 h-5" />
+                  Tersalin!
+                </>
+              ) : (
+                <>
+                  {isSharing ? <Copy className="w-5 h-5 animate-pulse" /> : <Share2 className="w-5 h-5" />}
+                  {isSharing ? 'Berbagi...' : 'Bagikan'}
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -258,6 +361,14 @@ export default function JaninPage() {
           </div>
         </div>
       </div>
+
+      {/* Toast notification for share success */}
+      {shareSuccess && (
+        <div className="fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 z-50">
+          <Check className="w-5 h-5" />
+          <span>Link berhasil disalin ke clipboard!</span>
+        </div>
+      )}
     </div>
   );
 }

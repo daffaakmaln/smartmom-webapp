@@ -9,7 +9,8 @@ import {
   RefreshCw, 
   Bookmark,
   Star,
-  Check
+  Check,
+  ArrowRight
 } from "lucide-react";
 import PageHeader from "@/components/header_page";
 import Link from "next/link";
@@ -294,12 +295,44 @@ export default function MenuMakanan() {
       )}
 
       {/* Header */}
+            {/* Header */}
       <PageHeader 
         title="Rekomendasi menu"
         description="Menu disesuaikan dengan usia kehamilan dan kebutuhan nutrisi ibu."
         userName="SmartMom"
       />
 
+ {/* Saved Menus Button - Versi Lebih Menarik */}
+{savedMenus.length > 0 && (
+  <div className="max-w-7xl mx-auto px-6 pt-4">
+    <Link 
+      href="/tersimpan" 
+      className="group block w-full" // 'group' untuk mengaktifkan group-hover
+    >
+      <div className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl p-5 font-semibold flex items-center justify-between shadow-md hover:shadow-lg hover:shadow-green-300/50 transition-all duration-300 transform hover:scale-[1.01]">
+        
+        {/* Konten Kiri */}
+        <div className="flex items-center gap-4">
+          <div className="w-11 h-11 bg-pink bg-opacity-25 rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110">
+            <Bookmark size={30} fill="white" />
+          </div>
+          <div className="text-left">
+            <p className="text-base font-bold">Menu Tersimpan</p>
+            <p className="text-sm opacity-80">
+              Lihat {savedMenus.length} menu favorit Anda
+            </p>
+          </div>
+        </div>
+        
+        {/* Ikon Panah (Kanan) */}
+        <ArrowRight 
+          size={24} 
+          className="transition-transform duration-300 group-hover:translate-x-1" 
+        />
+      </div>
+    </Link>
+  </div>
+)}
       {/* Nutrition Summary Cards */}
       <div className="max-w-7xl mx-auto px-6 py-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
