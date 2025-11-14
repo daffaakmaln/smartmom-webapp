@@ -60,7 +60,7 @@ export default function PageHeader({
   title,
   description,
   userName = "S",
-  showSubscription = false,
+  showSubscription = true,
   isPremium = false,
 }: PageHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -130,11 +130,15 @@ export default function PageHeader({
               )}
             </button>
 
+
+            <Link href="/pengaturan">
             <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
               <span className="text-white text-xs lg:text-sm font-semibold">
                 {userName.charAt(0).toUpperCase()}
               </span>
             </div>
+            </Link> 
+            
           </div>
         </div>
       </div>
